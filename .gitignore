@@ -1,0 +1,116 @@
+# ============================================================
+# MerchantOS - Root .gitignore
+# ============================================================
+
+# ------------------------------------------------------------
+# OS / IDE Clutter
+# ------------------------------------------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+.vscode/
+.idea/
+
+# ------------------------------------------------------------
+# Environment Files
+# ------------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+backend/.env
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.production.local
+frontend/.env.test.local
+
+# ------------------------------------------------------------
+# Frontend (Next.js / Node.js)
+# ------------------------------------------------------------
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.turbo/
+frontend/coverage/
+
+# Package manager logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+
+# TypeScript
+frontend/*.tsbuildinfo
+
+# ------------------------------------------------------------
+# Backend (Python / FastAPI)
+# ------------------------------------------------------------
+backend/venv/
+backend/.venv/
+backend/env/
+backend/ENV/
+
+backend/__pycache__/
+backend/**/__pycache__/
+
+backend/*.py[cod]
+backend/**/*.py[cod]
+
+backend/.pytest_cache/
+backend/.mypy_cache/
+backend/.ruff_cache/
+backend/.coverage
+backend/htmlcov/
+backend/.tox/
+
+# Python build artifacts
+backend/build/
+backend/dist/
+backend/*.egg-info/
+backend/.eggs/
+backend/pip-wheel-metadata/
+
+# ------------------------------------------------------------
+# Database
+# ------------------------------------------------------------
+*.db
+*.sqlite3
+
+# PostgreSQL Docker volume (if stored locally)
+postgres-data/
+docker-data/
+
+# ------------------------------------------------------------
+# Logs
+# ------------------------------------------------------------
+logs/
+*.log
+
+# ------------------------------------------------------------
+# Temporary / Cache
+# ------------------------------------------------------------
+.cache/
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+
+# ------------------------------------------------------------
+# Docker
+# ------------------------------------------------------------
+docker-compose.override.yml
+
+# ------------------------------------------------------------
+# AI / Local Tooling
+# ------------------------------------------------------------
+.cursor/
+.claude/
+.openai/
+
+# ------------------------------------------------------------
+# Misc
+# ------------------------------------------------------------
+coverage/

@@ -7,6 +7,7 @@ from app.models.merchant import Merchant
 from app.models.order import Order
 from app.models.order_item import OrderItem
 from app.models.product import Product
+from .campaign import Campaign
 
 __all__ = [
     "Merchant",
@@ -18,4 +19,5 @@ __all__ = [
     "AuditLog",
     "Conversation",
     "Message",
+    "Campaign",
 ]

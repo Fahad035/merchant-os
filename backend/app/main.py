@@ -4,15 +4,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.chat import router as chat_router
 from app.api.product import router as product_router
 from app.api.dashboard import router as dashboard_router
-from app.api.campaign import (
-    router as campaign_router,
-)
-from app.api.checkout import (
-    router as checkout_router,
-)
-from app.api.audit import (
-    router as audit_router,
-)
+from app.api.campaign import ( router as campaign_router, )
+from app.api.checkout import ( router as checkout_router, )
+from app.api.audit import ( router as audit_router, )
+from app.api.settings import ( router as settings_router,)
 
 app = FastAPI(
     title="MerchantOS API",
@@ -35,7 +30,7 @@ app.include_router(campaign_router)
 app.include_router(dashboard_router)
 app.include_router(checkout_router)
 app.include_router(audit_router)
-
+app.include_router(settings_router)
 
 @app.get("/")
 def root():

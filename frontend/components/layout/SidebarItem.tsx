@@ -21,15 +21,25 @@ export default function SidebarItem({ item }: Props) {
     <Link
       href={item.href}
       className={cn(
-        "flex items-center gap-3 rounded-lg px-4 py-3 transition-all",
+        "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all",
         active
-          ? "bg-blue-600 text-white"
-          : "text-gray-600 hover:bg-gray-100 hover:text-black"
+          ? "brand-gradient text-white shadow-pop"
+          : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
       )}
     >
-      <Icon size={20} />
+      <Icon
+        size={18}
+        className={cn(
+          "shrink-0 transition-transform",
+          active ? "text-white" : "text-sidebar-foreground/50 group-hover:text-sidebar-accent-foreground"
+        )}
+      />
 
-      <span>{item.title}</span>
+      <span className="truncate">{item.title}</span>
+
+      {active && (
+        <span className="absolute right-3 h-1.5 w-1.5 rounded-full bg-white/90" />
+      )}
     </Link>
   );
 }

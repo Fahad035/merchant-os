@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { LucideIcon } from "lucide-react";
 
@@ -20,35 +20,38 @@ export default function KpiCard({
   positive = true,
 }: KpiCardProps) {
   return (
-    <Card className="transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+    <Card className="transition-all duration-300 hover:-translate-y-1">
       <CardContent className="p-6">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm font-medium text-muted-foreground">
               {title}
             </p>
 
-            <h2 className="mt-2 text-3xl font-bold">
+            <h2 className="mt-2 text-3xl font-bold tracking-tight">
               {value}
             </h2>
 
             {change && (
               <div
-                className={`mt-3 flex items-center text-sm ${
+                className={`mt-3 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
                   positive
-                    ? "text-green-600"
-                    : "text-red-600"
+                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                    : "bg-destructive/10 text-destructive"
                 }`}
               >
-                <ArrowUpRight className="mr-1 h-4 w-4" />
-
+                {positive ? (
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                ) : (
+                  <ArrowDownRight className="h-3.5 w-3.5" />
+                )}
                 {change}
               </div>
             )}
           </div>
 
-          <div className="rounded-xl bg-blue-100 p-3">
-            <Icon className="h-7 w-7 text-blue-600" />
+          <div className="rounded-2xl brand-gradient p-3 shadow-pop">
+            <Icon className="h-6 w-6 text-white" />
           </div>
         </div>
       </CardContent>

@@ -1,17 +1,23 @@
-import DashboardLayout from "@/components/layout/DashboardLayout";
+import MarketingNavbar from "@/components/marketing/MarketingNavbar";
+import Hero from "@/components/marketing/Hero";
+import StatsStrip from "@/components/marketing/StatsStrip";
+import FeatureGrid from "@/components/marketing/FeatureGrid";
+import HowItWorks from "@/components/marketing/HowItWorks";
+import DemoShowcase from "@/components/marketing/DemoShowcase";
+import PricingTeaser from "@/components/marketing/PricingTeaser";
+import MarketingFooter from "@/components/marketing/MarketingFooter";
 
 export default function Home() {
   return (
-    <DashboardLayout>
-      <div className="rounded-xl border bg-white p-8">
-        <h2 className="text-3xl font-bold">
-          Merchant Dashboard
-        </h2>
-
-        <p className="mt-4 text-gray-600">
-          Dashboard layout is ready.
-        </p>
-      </div>
-    </DashboardLayout>
+    <div className="min-h-screen bg-background">
+      <MarketingNavbar />
+      <Hero />
+      <StatsStrip />
+      <FeatureGrid />
+      <HowItWorks />
+      <DemoShowcase />
+      <PricingTeaser />
+      <MarketingFooter />
+    </div>
   );
 }

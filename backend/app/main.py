@@ -10,6 +10,9 @@ from app.api.campaign import (
 from app.api.checkout import (
     router as checkout_router,
 )
+from app.api.audit import (
+    router as audit_router,
+)
 
 app = FastAPI(
     title="MerchantOS API",
@@ -31,7 +34,7 @@ app.include_router(product_router)
 app.include_router(campaign_router)
 app.include_router(dashboard_router)
 app.include_router(checkout_router)
-
+app.include_router(audit_router)
 
 
 @app.get("/")

@@ -7,6 +7,9 @@ from app.api.dashboard import router as dashboard_router
 from app.api.campaign import (
     router as campaign_router,
 )
+from app.api.checkout import (
+    router as checkout_router,
+)
 
 app = FastAPI(
     title="MerchantOS API",
@@ -25,10 +28,9 @@ app.add_middleware(
 
 app.include_router(chat_router)
 app.include_router(product_router)
-app.include_router(
-    campaign_router
-)
+app.include_router(campaign_router)
 app.include_router(dashboard_router)
+app.include_router(checkout_router)
 
 
 

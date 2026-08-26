@@ -121,7 +121,7 @@ cp .env.example .env
 ```
 *Ensure that your `.env` configuration file contains your `DATABASE_URL` target:*
 ```env
-DATABASE_URL=postgresql+psycopg://merchantos:merchantos@localhost:5432/merchantos
+DATABASE_URL=yr_url
 ```
 
 ### 3. Database Schema Migration & Seeding

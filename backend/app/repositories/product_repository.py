@@ -21,3 +21,12 @@ class ProductRepository(BaseRepository[Product]):
             .filter(Product.category == category)
             .all()
         )
+
+    def get_by_merchant(self, merchant_id):
+        return (
+            self.db.query(Product)
+            .filter(
+                Product.merchant_id == merchant_id
+            )
+            .all()
+        )

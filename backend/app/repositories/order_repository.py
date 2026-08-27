@@ -14,3 +14,12 @@ class OrderRepository(BaseRepository[Order]):
             .filter(Order.status == status)
             .all()
         )
+
+    def get_by_merchant(self, merchant_id):
+        return (
+            self.db.query(Order)
+            .filter(
+                Order.merchant_id == merchant_id
+            )
+            .all()
+        )

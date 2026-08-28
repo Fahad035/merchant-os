@@ -5,61 +5,89 @@ from app.models.ai_recommendation import AIRecommendation
 from app.services.recommendation_engine import RecommendationEngine
 
 
-class BundleRecommendationEngine(RecommendationEngine):
-    """
-    Generates bundle recommendations using
-    merchant catalog data.
-    """
+class BundleRecommendationEngine(
+    RecommendationEngine
+):
 
     def generate(self, merchant_id):
 
-        products = self.load_products(merchant_id)
+        products = self.load_products(
+            merchant_id
+        )
 
-        if len(products) < 2:
-            return []
+        product_lookup = {
+            p.id: p
+            for p in products
+        }
+
+        orders = self.load_orders(
+            merchant_id
+        )
+
+        grouped = self.group_order_items(
+            orders
+        )
+
+        pair_counts = self.count_product_pairs(
+            grouped
+        )
 
         recommendations = []
 
-        # Compare every pair of products
-        for i in range(len(products)):
-            for j in range(i + 1, len(products)):
+        for (
+            first_id,
+            second_id,
+        ), frequency in pair_counts.items():
 
-                first = products[i]
-                second = products[j]
+            if frequency < 2:
+                continue
 
-                # Same category
-                if first.category != second.category:
-                    continue
+            if first_id not in product_lookup:
+                continue
 
-                # Ignore out of stock
-                if first.stock_quantity <= 0:
-                    continue
+            if second_id not in product_lookup:
+                continue
 
-                if second.stock_quantity <= 0:
-                    continue
+            first = product_lookup[first_id]
+            second = product_lookup[second_id]
 
-                revenue = (
-                    Decimal(first.price)
-                    + Decimal(second.price)
-                ) * Decimal("0.15")
+            revenue = (
+                Decimal(first.price)
+                + Decimal(second.price)
+            ) * Decimal("0.15")
 
-                recommendation = AIRecommendation(
+            confidence = min(
+                95,
+                60 + frequency * 5,
+            )
+
+            recommendations.append(
+
+                AIRecommendation(
+
                     merchant_id=merchant_id,
+
                     action_id=f"BUNDLE-{uuid4().hex[:8].upper()}",
+
                     title=f"Bundle {first.name} + {second.name}",
+
                     explanation=(
-                        f"Bundle '{first.name}' with "
-                        f"'{second.name}' to increase "
-                        "average order value."
+                        f"These products were purchased together "
+                        f"{frequency} times."
                     ),
+
                     action_type="bundle",
+
                     expected_revenue=revenue,
-                    confidence=85,
+
+                    confidence=confidence,
+
                     risk_level="low",
+
                     requires_approval=True,
+
                     status="pending",
                 )
-
-                recommendations.append(recommendation)
+            )
 
         return recommendations

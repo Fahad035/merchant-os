@@ -16,3 +16,37 @@ class AuditRepository(BaseRepository[AuditLog]):
             )
             .all()
         )
+
+    def create(
+
+    self,
+
+    merchant_id,
+
+    recommendation_id,
+
+    action,
+
+    details,
+
+    ):
+
+        audit = AuditLog(
+
+            merchant_id=merchant_id,
+
+            recommendation_id=recommendation_id,
+
+            action=action,
+
+            details=details,
+
+        )
+
+        self.db.add(audit)
+
+        self.db.commit()
+
+        self.db.refresh(audit)
+
+        return audit

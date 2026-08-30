@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-import { Brain } from "lucide-react";
 
 import {
   Dialog,
@@ -29,8 +28,8 @@ export default function GenerateCampaignDialog() {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button>Generate with AI</Button>
+      <DialogTrigger className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90">
+        Generate with AI
       </DialogTrigger>
 
       <DialogContent className="max-w-2xl">

@@ -61,7 +61,7 @@ export default function RevenueChart({ data }: RevenueChartProps) {
               />
 
               <Tooltip
-                formatter={(value: any) => {
+                formatter={(value) => {
                   const numericValue = Number(value) || 0;
                   return [`₹${numericValue.toLocaleString()}`, "Revenue"];
                 }}

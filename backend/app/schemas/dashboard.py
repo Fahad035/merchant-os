@@ -54,4 +54,4 @@ class DashboardResponse(BaseModel):
 
     recent_orders: list[RecentOrder]
 
-    insights: list[AIRecommendation]
+    insights: list[str]

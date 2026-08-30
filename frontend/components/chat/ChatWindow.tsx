@@ -52,7 +52,7 @@ export default function ChatWindow({
           <div className="mx-auto mt-24 max-w-xl text-center">
 
             <h2 className="mb-4 text-3xl font-bold">
-              👋 Welcome to MerchantOS
+              Welcome to MerchantOS
             </h2>
 
             <p className="text-muted-foreground">
@@ -62,15 +62,24 @@ export default function ChatWindow({
             <div className="mt-8 space-y-3">
 
               <div className="rounded-lg border p-4 text-left">
-                💰 How can I increase revenue?
+                How can I increase my revenue this month?
               </div>
 
               <div className="rounded-lg border p-4 text-left">
-                📦 Recommend product bundles
+                Which products should I bundle?
               </div>
 
               <div className="rounded-lg border p-4 text-left">
-                📈 Analyze recent orders
+                Analyze my recent sales performance.
+              </div>
+              <div className="rounded-lg border p-4 text-left">
+                Suggest a marketing campaign.
+              </div>
+              <div className="rounded-lg border p-4 text-left">
+                Which products need restocking?
+              </div>
+              <div className="rounded-lg border p-4 text-left">
+                Summarize my business performance.
               </div>
 
             </div>

@@ -6,8 +6,7 @@ import dashboardService from "@/services/dashboard";
 import { DashboardResponse } from "@/types/dashboard";
 
 export function useDashboard() {
-  const [dashboard, setDashboard] =
-    useState<DashboardResponse | null>(null);
+  const [dashboard, setDashboard] = useState<DashboardResponse | null>(null);
 
   const [loading, setLoading] = useState(true);
 
@@ -18,8 +17,9 @@ export function useDashboard() {
       setLoading(true);
       setError(false);
 
-      const data =
-        await dashboardService.getDashboard();
+      const merchantId = process.env.NEXT_PUBLIC_MERCHANT_ID!;
+
+      const data = await dashboardService.getDashboard(merchantId);
 
       setDashboard(data);
     } catch (err) {
@@ -37,7 +37,7 @@ export function useDashboard() {
   useEffect(() => {
     const timer = setInterval(() => {
       loadDashboard();
-    }, 30000);
+    }, 300000); // 5 minutes
 
     return () => clearInterval(timer);
   }, [loadDashboard]);

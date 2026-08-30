@@ -94,3 +94,18 @@ class RecommendationRepository(BaseRepository[AIRecommendation]):
             .first()
 
         )
+
+    def delete_pending_by_merchant(
+    self,
+    merchant_id,
+    ):
+        (
+            self.db.query(self.model)
+            .filter(
+                self.model.merchant_id == merchant_id,
+                self.model.status == "pending",
+            )
+            .delete()
+        )
+
+        self.db.commit()

@@ -45,5 +45,5 @@ export interface DashboardResponse {
 
   recent_orders: RecentOrder[];
 
-  insights: AIRecommendation[];
+  insights: string[];
 }

@@ -1,74 +1,104 @@
+from uuid import uuid4
+
 from sqlalchemy.orm import Session
 
-from app.services.bundle_recommendation import (
-    BundleRecommendationEngine,
+from app.repositories.merchant_repository import MerchantRepository
+from app.repositories.order_repository import OrderRepository
+from app.repositories.product_repository import ProductRepository
+from app.repositories.recommendation_repository import (
+    RecommendationRepository,
 )
-from app.services.cross_sell_recommendation import (
-    CrossSellRecommendationEngine,
-)
-from app.services.inventory_recommendation import (
-    InventoryRecommendationEngine,
-)
-from app.services.pricing_recommendation import (
-    PricingRecommendationEngine,
-)
-from app.services.campaign_recommendation import (
-    CampaignRecommendationEngine,
-)
+
+from app.models.ai_recommendation import AIRecommendation
+
+from app.services.ai.llm_service import LLMService
+from app.services.ai.parser import RecommendationParser
+from app.services.ai.prompts import PromptBuilder
 
 
 class RecommendationService:
 
     def __init__(self, db: Session):
 
-        self.bundle_engine = BundleRecommendationEngine(db)
+        self.db = db
 
-        self.cross_sell_engine = CrossSellRecommendationEngine(db)
+        self.products = ProductRepository(db)
+        self.orders = OrderRepository(db)
+        self.merchants = MerchantRepository(db)
+        self.recommendations = RecommendationRepository(db)
 
-        self.inventory_engine = InventoryRecommendationEngine(db)
+        self.llm = LLMService()
 
-        self.pricing_engine = PricingRecommendationEngine(db)
+    # --------------------------------------------------------
 
-        self.campaign_engine = CampaignRecommendationEngine(db)
+    def generate(
+        self,
+        merchant_id,
+    ):
 
-    def generate(self, merchant_id):
+        merchant = self.merchants.get(merchant_id)
 
-        recommendations = []
-
-        recommendations.extend(
-            self.bundle_engine.generate(
-                merchant_id
-            )
+        products = self.products.get_by_merchant(
+            merchant_id
         )
 
-        recommendations.extend(
-            self.cross_sell_engine.generate(
-                merchant_id
-            )
+        orders = self.orders.get_by_merchant(
+            merchant_id
         )
 
-        recommendations.extend(
-            self.inventory_engine.generate(
-                merchant_id
-            )
+        prompt = PromptBuilder.recommendation_prompt(
+            merchant_name=merchant.name,
+            products=products,
+            orders=orders,
         )
 
-        recommendations.extend(
-            self.pricing_engine.generate(
-                merchant_id
-            )
+        ai_output = self.llm.ask(
+            prompt,
+            json_mode=True,
         )
 
-        recommendations.extend(
-            self.campaign_engine.generate(
-                merchant_id
-            )
+        ai_output = RecommendationParser.validate(
+            ai_output
         )
 
-        if recommendations:
+        self.recommendations.delete_pending_by_merchant(
+            merchant_id
+        )
 
-            self.bundle_engine.save_all(
-                recommendations
+        saved = []
+
+        for item in ai_output:
+
+            recommendation = AIRecommendation(
+
+                merchant_id=merchant_id,
+
+                action_id=str(uuid4()),
+
+                title=item["title"],
+
+                explanation=item["explanation"],
+
+                action_type=item["action_type"],
+
+                expected_revenue=item["expected_revenue"],
+
+                confidence=item["confidence"],
+
+                risk_level=item["risk_level"],
+
+                requires_approval=item["requires_approval"],
+
+                status="pending",
             )
 
-        return recommendations
+            self.db.add(recommendation)
+
+            saved.append(recommendation)
+
+        self.db.commit()
+
+        for rec in saved:
+            self.db.refresh(rec)
+
+        return saved

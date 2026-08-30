@@ -3,19 +3,16 @@
 import { Bot, User } from "lucide-react";
 
 import { ChatMessage } from "@/types/chat";
+import ReactMarkdown from "react-markdown";
 
 interface ChatBubbleProps {
   message: ChatMessage;
 }
 
-export default function ChatBubble({
-  message,
-}: ChatBubbleProps) {
+export default function ChatBubble({ message }: ChatBubbleProps) {
   const isUser = message.role === "user";
 
-  const formattedTime = new Date(
-    message.created_at
-  ).toLocaleTimeString([], {
+  const formattedTime = new Date(message.created_at).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -46,9 +43,7 @@ export default function ChatBubble({
 
           <span
             className={`text-xs ${
-              isUser
-                ? "text-blue-100"
-                : "text-gray-500 dark:text-gray-400"
+              isUser ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
             }`}
           >
             {formattedTime}
@@ -56,7 +51,7 @@ export default function ChatBubble({
         </div>
 
         <div className="whitespace-pre-wrap text-sm leading-7">
-          {message.content}
+          <ReactMarkdown>{message.content}</ReactMarkdown>
         </div>
       </div>
 

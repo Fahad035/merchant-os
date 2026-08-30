@@ -12,26 +12,23 @@ import AIInsightCard from "./AIInsightCard";
 import { AIRecommendation } from "@/types/dashboard";
 
 interface Props {
-  insights: AIRecommendation[];
+  insights: string[];
 }
 
-export default function AIInsights({
-  insights,
-}: Props) {
+export default function AIInsights({ insights }: Props) {
   return (
-    <Card className="h-full">
+    <Card>
       <CardHeader>
-        <CardTitle>
-          AI Recommendations
-        </CardTitle>
+        <CardTitle>AI Insights</CardTitle>
       </CardHeader>
 
-      <CardContent className="space-y-4">
-        {insights.map((insight) => (
-          <AIInsightCard
-            key={insight.action_id}
-            insight={insight}
-          />
+      <CardContent className="space-y-3">
+        {insights.map((text, index) => (
+          <Card key={index}>
+            <CardContent className="p-4">
+              {text}
+            </CardContent>
+          </Card>
         ))}
       </CardContent>
     </Card>

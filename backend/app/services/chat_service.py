@@ -1,9 +1,12 @@
-from uuid import UUID
-
 from sqlalchemy.orm import Session
 
 from app.repositories.conversation_repository import ConversationRepository
 from app.repositories.message_repository import MessageRepository
+from app.repositories.merchant_repository import MerchantRepository
+from app.repositories.order_repository import OrderRepository
+from app.repositories.product_repository import ProductRepository
+from app.repositories.recommendation_repository import RecommendationRepository
+
 from app.schemas.chat import (
     ChatRequest,
     ChatResponse,
@@ -11,117 +14,156 @@ from app.schemas.chat import (
     MessageResponse,
 )
 
+from app.services.ai.llm_service import LLMService
+from app.services.ai.prompts import PromptBuilder
+
 
 class ChatService:
+
     def __init__(self, db: Session):
+
         self.db = db
+
         self.conversation_repo = ConversationRepository(db)
         self.message_repo = MessageRepository(db)
 
-    def chat(self, request: ChatRequest) -> ChatResponse:
-        """
-        Process a merchant message and return an AI response.
-        """
+        self.merchant_repo = MerchantRepository(db)
+        self.product_repo = ProductRepository(db)
+        self.order_repo = OrderRepository(db)
+        self.recommendation_repo = RecommendationRepository(db)
 
-        # Continue existing conversation
+        self.llm = LLMService()
+
+    # ---------------------------------------------------------
+
+    def chat(
+        self,
+        request: ChatRequest,
+    ) -> ChatResponse:
+
         if request.conversation_id:
+
             conversation = self.conversation_repo.get(
                 request.conversation_id
             )
 
             if conversation is None:
-                raise ValueError("Conversation not found")
+                raise ValueError(
+                    "Conversation not found"
+                )
 
-        # Create new conversation
         else:
-            title = self._generate_title(request.message)
 
             conversation = (
                 self.conversation_repo.create_conversation(
                     merchant_id=request.merchant_id,
-                    title=title,
+                    title=self._generate_title(
+                        request.message
+                    ),
                 )
             )
 
-        # Save merchant message
         user_message = self.message_repo.create_message(
             conversation_id=conversation.id,
             role="user",
             content=request.message,
         )
 
-        # Generate AI response
-        ai_text = self._generate_ai_response(request.message)
+        merchant = self.merchant_repo.get(
+            request.merchant_id
+        )
 
-        # Save assistant response
-        assistant_message = self.message_repo.create_message(
-            conversation_id=conversation.id,
-            role="assistant",
-            content=ai_text,
+        products = self.product_repo.get_by_merchant(
+            request.merchant_id
+        )
+
+        orders = self.order_repo.get_by_merchant(
+            request.merchant_id
+        )
+
+        recommendations = (
+            self.recommendation_repo.get_by_merchant(
+                request.merchant_id
+            )
+        )
+
+        prompt = PromptBuilder.chat_prompt(
+            merchant_name=merchant.business_name,
+            question=request.message,
+            products=products,
+            orders=orders,
+            recommendations=recommendations,
+        )
+
+        try:
+
+            ai_response = self.llm.ask(prompt)
+
+            if not ai_response:
+                ai_response = (
+                    "The AI returned an empty response."
+                )
+
+        except Exception as e:
+
+            print("Chat AI Error:")
+            print(e)
+
+            ai_response = (
+                "Sorry, I couldn't contact the AI service. "
+                "Please try again later."
+            )
+
+        assistant_message = (
+            self.message_repo.create_message(
+                conversation_id=conversation.id,
+                role="assistant",
+                content=ai_response,
+            )
         )
 
         return ChatResponse(
+
             conversation=ConversationResponse.model_validate(
                 conversation
             ),
+
             user_message=MessageResponse.model_validate(
                 user_message
             ),
+
             assistant_message=MessageResponse.model_validate(
                 assistant_message
             ),
         )
 
-    def _generate_title(self, message: str) -> str:
-        """
-        Generate a short conversation title.
-        """
+    # ---------------------------------------------------------
 
-        words = message.split()
+    def _generate_title(
+        self,
+        message: str,
+    ) -> str:
 
-        if not words:
-            return "New Conversation"
+        prompt = f"""
+Generate a short conversation title.
 
-        return " ".join(words[:5])
+Maximum 5 words.
 
-    def _generate_ai_response(self, message: str) -> str:
-        """
-        Mock AI response.
-        """
+Message:
+{message}
 
-        text = message.lower()
+Return title only.
+"""
 
-        if "revenue" in text:
+        try:
 
-            return (
-                "I analyzed your business.\n\n"
-                "I found three revenue opportunities:\n\n"
-                "• Bundle Running Shoes with Sports Socks\n"
-                "Expected Revenue: ₹18,000\n\n"
-                "• Upsell Shoe Care Kit\n"
-                "Expected Revenue: ₹9,000\n\n"
-                "• Weekend Campaign\n"
-                "Expected Revenue: ₹32,000\n\n"
-                "Would you like me to prepare these proposals?"
-            )
+            title = self.llm.ask(prompt)
 
-        if "campaign" in text:
+            if title:
+                return title.strip()
 
-            return (
-                "I recommend targeting inactive customers "
-                "with a 10% weekend campaign."
-            )
+        except Exception as e:
 
-        if "orders" in text:
+            print("Title Error:", e)
 
-            return (
-                "Your recent order trend looks healthy.\n"
-                "Average order value is increasing."
-            )
-
-        return (
-            "I understand your request.\n\n"
-            "I'm currently running in demo mode.\n"
-            "The AI Planner in Milestone 5 will provide "
-            "dynamic recommendations."
-        )
+        return "New Conversation"

@@ -29,11 +29,8 @@ export default function GenerateCampaignDialog() {
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button>
-          <Brain className="mr-2 h-4 w-4" />
-          Generate with AI
-        </Button>
+      <DialogTrigger asChild>
+        <Button>Generate with AI</Button>
       </DialogTrigger>
 
       <DialogContent className="max-w-2xl">

@@ -1,10 +1,18 @@
 import api from "./api";
-
 import { DashboardResponse } from "@/types/dashboard";
 
 class DashboardService {
-  async getDashboard(): Promise<DashboardResponse> {
-    const response = await api.get<DashboardResponse>("/dashboard");
+  async getDashboard(
+    merchantId: string
+  ): Promise<DashboardResponse> {
+    const response = await api.get(
+      "/dashboard",
+      {
+        params: {
+          merchant_id: merchantId,
+        },
+      }
+    );
 
     return response.data;
   }

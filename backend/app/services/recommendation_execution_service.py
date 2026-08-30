@@ -6,7 +6,7 @@ from app.repositories.recommendation_repository import (
     RecommendationRepository,
 )
 from app.repositories.audit_repository import (
-    AuditLogRepository,
+    AuditRepository,
 )
 from app.services.actions.action_factory import ActionFactory
 
@@ -19,7 +19,7 @@ class RecommendationExecutionService:
 
         self.recommendations = RecommendationRepository(db)
 
-        self.audit_logs = AuditLogRepository(db)
+        self.audit_logs = AuditRepository(db)
 
     # --------------------------------------------------
 

@@ -17,9 +17,7 @@ interface RevenueChartProps {
   data: RevenuePoint[];
 }
 
-export default function RevenueChart({
-  data,
-}: RevenueChartProps) {
+export default function RevenueChart({ data }: RevenueChartProps) {
   return (
     <Card className="shadow-sm">
       <CardHeader>
@@ -46,30 +44,15 @@ export default function RevenueChart({
                   x2="0"
                   y2="1"
                 >
-                  <stop
-                    offset="5%"
-                    stopColor="#2563eb"
-                    stopOpacity={0.4}
-                  />
+                  <stop offset="5%" stopColor="#2563eb" stopOpacity={0.4} />
 
-                  <stop
-                    offset="95%"
-                    stopColor="#2563eb"
-                    stopOpacity={0.02}
-                  />
+                  <stop offset="95%" stopColor="#2563eb" stopOpacity={0.02} />
                 </linearGradient>
               </defs>
 
-              <CartesianGrid
-                strokeDasharray="3 3"
-                vertical={false}
-              />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
 
-              <XAxis
-                dataKey="day"
-                tickLine={false}
-                axisLine={false}
-              />
+              <XAxis dataKey="day" tickLine={false} axisLine={false} />
 
               <YAxis
                 tickFormatter={(value) => `₹${value / 1000}k`}
@@ -78,10 +61,10 @@ export default function RevenueChart({
               />
 
               <Tooltip
-                formatter={(value: number) => [
-                  `₹${value.toLocaleString()}`,
-                  "Revenue",
-                ]}
+                formatter={(value: any) => {
+                  const numericValue = Number(value) || 0;
+                  return [`₹${numericValue.toLocaleString()}`, "Revenue"];
+                }}
               />
 
               <Area

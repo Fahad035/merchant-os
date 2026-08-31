@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, Sparkles, X } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import ThemeToggle from "./ThemeToggle";
 
 const NAV_LINKS = [
   { label: "Product", href: "#features" },
@@ -38,8 +39,12 @@ export default function MarketingNavbar() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
-          <Link href="/dashboard" className={buttonVariants({ variant: "ghost" })}>
+        <div className="hidden items-center gap-1 md:flex">
+          <ThemeToggle />
+          <Link
+            href="/dashboard"
+            className={buttonVariants({ variant: "ghost", className: "ml-2" })}
+          >
             Sign in
           </Link>
           <Link href="/dashboard" className={buttonVariants()}>
@@ -47,13 +52,16 @@ export default function MarketingNavbar() {
           </Link>
         </div>
 
-        <button
-          className="rounded-lg p-2 text-foreground md:hidden"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Toggle menu"
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        <div className="flex items-center gap-1 md:hidden">
+          <ThemeToggle />
+          <button
+            className="rounded-lg p-2 text-foreground"
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Toggle menu"
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
       {open && (

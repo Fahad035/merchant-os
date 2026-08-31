@@ -1,3 +1,5 @@
+import Reveal from "./Reveal";
+
 const STATS = [
   { label: "Revenue tracked", value: "₹8.2L+" },
   { label: "AI opportunities surfaced", value: "5" },
@@ -14,15 +16,15 @@ export default function StatsStrip() {
         </p>
 
         <div className="mt-6 grid grid-cols-2 gap-8 sm:grid-cols-4">
-          {STATS.map((stat) => (
-            <div key={stat.label} className="text-center">
+          {STATS.map((stat, index) => (
+            <Reveal key={stat.label} delay={index * 80} className="text-center">
               <p className="text-3xl font-extrabold tracking-tight brand-gradient-text">
                 {stat.value}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
                 {stat.label}
               </p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

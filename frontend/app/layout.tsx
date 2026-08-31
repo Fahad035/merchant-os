@@ -18,6 +18,19 @@ export const metadata: Metadata = {
   description: "AI Commerce Copilot",
 };
 
+// Runs before hydration so the correct theme class is present on first
+// paint — avoids a flash of the wrong theme when toggling dark mode.
+const THEME_INIT_SCRIPT = `
+(function () {
+  try {
+    var stored = localStorage.getItem("merchantos-theme");
+    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var dark = stored ? stored === "dark" : prefersDark;
+    document.documentElement.classList.toggle("dark", dark);
+  } catch (e) {}
+})();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -26,9 +39,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${fontSans.variable} ${fontMono.variable}`}
     >
-      <body className="min-h-screen bg-gray-50 antialiased">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
+      <body className="min-h-screen bg-background antialiased" suppressHydrationWarning>
         {children}
       </body>
     </html>

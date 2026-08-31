@@ -1,11 +1,13 @@
 import { ArrowUpRight, Package2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import Reveal from "./Reveal";
 
 export default function DemoShowcase() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
       <div className="grid items-center gap-12 lg:grid-cols-2">
+        <Reveal>
         <div>
           <p className="font-mono text-xs tracking-wide text-primary">
             FROM THE DEMO WORKSPACE
@@ -44,7 +46,9 @@ export default function DemoShowcase() {
             </li>
           </ul>
         </div>
+        </Reveal>
 
+        <Reveal delay={150}>
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -76,6 +80,7 @@ export default function DemoShowcase() {
             </div>
           </div>
         </Card>
+        </Reveal>
       </div>
     </section>
   );

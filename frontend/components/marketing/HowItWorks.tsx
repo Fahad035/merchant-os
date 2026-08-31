@@ -1,4 +1,5 @@
 import { Brain, ShieldCheck, UserCheck } from "lucide-react";
+import Reveal from "./Reveal";
 
 const STEPS = [
   {
@@ -28,17 +29,17 @@ export default function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="border-y border-border/60 bg-muted/30 py-20"
+      className="scroll-mt-24 border-y border-border/60 bg-muted/30 py-20"
     >
       <div className="mx-auto max-w-7xl px-6">
-        <div className="mx-auto max-w-2xl text-center">
+        <Reveal className="mx-auto max-w-2xl text-center">
           <p className="font-mono text-xs tracking-wide text-primary">
             THE LOOP
           </p>
           <h2 className="mt-3 text-balance text-3xl font-bold tracking-tight sm:text-4xl">
             Every AI action follows the same accountable loop.
           </h2>
-        </div>
+        </Reveal>
 
         <div className="relative mt-14 grid gap-10 md:grid-cols-3">
           {/* connecting line */}
@@ -47,8 +48,8 @@ export default function HowItWorks() {
             className="absolute top-6 left-0 right-0 hidden h-px bg-border/80 md:block"
           />
 
-          {STEPS.map((step) => (
-            <div key={step.number} className="relative text-center">
+          {STEPS.map((step, index) => (
+            <Reveal key={step.number} delay={index * 120} className="relative text-center">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full brand-gradient text-sm font-bold text-white shadow-pop">
                 {step.number}
               </div>
@@ -59,7 +60,7 @@ export default function HowItWorks() {
               <p className="mx-auto mt-2 max-w-xs text-sm text-muted-foreground">
                 {step.description}
               </p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

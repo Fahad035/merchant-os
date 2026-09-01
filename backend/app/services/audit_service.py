@@ -1,15 +1,13 @@
 from sqlalchemy.orm import Session
 
-from app.repositories.audit_repository import (
-    AuditRepository,
-)
-
-from app.models.audit_log import ( AuditLog )
+from app.models.audit_log import AuditLog
+from app.repositories.audit_repository import AuditRepository
 
 
 class AuditService:
 
     def __init__(self, db: Session):
+        self.db = db
         self.repository = AuditRepository(db)
 
     def dashboard(self):
@@ -18,19 +16,19 @@ class AuditService:
         approved = [
             log
             for log in logs
-            if log.status.lower() == "approved"
+            if "approved" in log.event_type.lower()
         ]
 
         rejected = [
             log
             for log in logs
-            if log.status.lower() == "rejected"
+            if "rejected" in log.event_type.lower()
         ]
 
         executed = [
             log
             for log in logs
-            if log.status.lower() == "executed"
+            if "executed" in log.event_type.lower()
         ]
 
         return {
@@ -57,7 +55,6 @@ class AuditService:
         actor,
         details,
     ):
-
         log = AuditLog(
             merchant_id=merchant_id,
             recommendation_id=recommendation_id,
@@ -67,9 +64,7 @@ class AuditService:
         )
 
         self.db.add(log)
-
         self.db.commit()
-
         self.db.refresh(log)
 
         return log

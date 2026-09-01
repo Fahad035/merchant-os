@@ -13,8 +13,8 @@ interface Props {
   logs: AuditLog[];
 }
 
-function icon(status: string) {
-  switch (status.toLowerCase()) {
+function icon(eventType: string) {
+  switch (eventType.toLowerCase()) {
     case "approved":
       return (
         <CheckCircle2 className="h-5 w-5 text-green-600" />
@@ -42,28 +42,22 @@ export default function AuditTimeline({
 }: Props) {
   return (
     <Card className="p-6">
-
-      <h2 className="text-xl font-semibold mb-6">
+      <h2 className="mb-6 text-xl font-semibold">
         AI Decision Timeline
       </h2>
 
       <div className="space-y-5">
-
         {logs.slice(0, 6).map((log) => (
-
           <div
             key={log.id}
             className="flex gap-4"
           >
-
-            {icon(log.status)}
+            {icon(log.event_type)}
 
             <div className="flex-1">
-
               <div className="flex justify-between">
-
                 <h3 className="font-medium">
-                  {log.action}
+                  {log.event_type}
                 </h3>
 
                 <span className="text-xs text-muted-foreground">
@@ -71,21 +65,21 @@ export default function AuditTimeline({
                     log.created_at
                   ).toLocaleString()}
                 </span>
-
               </div>
 
-              <p className="text-sm text-muted-foreground mt-1">
-                {log.reasoning}
+              <p className="mt-1 text-sm">
+                <span className="font-medium">
+                  {log.actor}
+                </span>
               </p>
 
+              <p className="text-sm text-muted-foreground">
+                {log.details}
+              </p>
             </div>
-
           </div>
-
         ))}
-
       </div>
-
     </Card>
   );
 }

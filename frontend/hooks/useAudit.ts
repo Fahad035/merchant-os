@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { getAuditDashboard } from "@/lib/audit-api";
 
@@ -13,57 +9,38 @@ import { AuditLog } from "@/types/audit";
 export function useAudit() {
   const [logs, setLogs] = useState<AuditLog[]>([]);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [error, setError] =
-    useState("");
+  const [error, setError] = useState("");
 
-  const [search, setSearch] =
-    useState("");
+  const [search, setSearch] = useState("");
 
-  const [total, setTotal] =
-    useState(0);
+  const [total, setTotal] = useState(0);
 
-  const [approved, setApproved] =
-    useState(0);
+  const [approved, setApproved] = useState(0);
 
-  const [rejected, setRejected] =
-    useState(0);
+  const [rejected, setRejected] = useState(0);
 
-  const [executed, setExecuted] =
-    useState(0);
+  const [executed, setExecuted] = useState(0);
 
   useEffect(() => {
     async function load() {
       try {
         setLoading(true);
 
-        const dashboard =
-          await getAuditDashboard();
+        const dashboard = await getAuditDashboard();
 
         setLogs(dashboard.logs);
 
-        setTotal(
-          dashboard.summary.total
-        );
+        setTotal(dashboard.summary.total);
 
-        setApproved(
-          dashboard.summary.approved
-        );
+        setApproved(dashboard.summary.approved);
 
-        setRejected(
-          dashboard.summary.rejected
-        );
+        setRejected(dashboard.summary.rejected);
 
-        setExecuted(
-          dashboard.summary.executed
-        );
+        setExecuted(dashboard.summary.executed);
       } catch (err: any) {
-        setError(
-          err?.message ??
-            "Unable to load audit logs."
-        );
+        setError(err?.message ?? "Unable to load audit logs.");
       } finally {
         setLoading(false);
       }
@@ -73,20 +50,13 @@ export function useAudit() {
   }, []);
 
   const filteredLogs = useMemo(() => {
-    return logs.filter((log) => {
-      const term =
-        search.toLowerCase();
+    const term = search.toLowerCase();
 
+    return logs.filter((log) => {
       return (
-        log.action
-          .toLowerCase()
-          .includes(term) ||
-        log.reasoning
-          .toLowerCase()
-          .includes(term) ||
-        log.status
-          .toLowerCase()
-          .includes(term)
+        log.event_type.toLowerCase().includes(term) ||
+        log.details.toLowerCase().includes(term) ||
+        log.actor.toLowerCase().includes(term)
       );
     });
   }, [logs, search]);

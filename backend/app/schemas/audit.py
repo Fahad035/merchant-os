@@ -1,39 +1,30 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel
-from pydantic import ConfigDict
+from pydantic import BaseModel, ConfigDict
 
 
 class AuditLogResponse(BaseModel):
-    model_config = ConfigDict(
-        from_attributes=True
-    )
+    model_config = ConfigDict(from_attributes=True)
 
     id: UUID
-
     merchant_id: UUID
+    recommendation_id: UUID
 
-    action: str
-
-    reasoning: str
-
-    status: str
+    event_type: str
+    actor: str
+    details: str
 
     created_at: datetime
 
 
 class AuditSummaryResponse(BaseModel):
     total: int
-
     approved: int
-
     rejected: int
-
     executed: int
 
 
 class AuditDashboardResponse(BaseModel):
     summary: AuditSummaryResponse
-
     logs: list[AuditLogResponse]

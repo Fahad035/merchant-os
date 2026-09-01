@@ -44,6 +44,14 @@ def recent_orders(
         merchant.id,
     )
 
+@router.get("/recommendation")
+def checkout_recommendation(
+    merchant_id: UUID,
+    db: Session = Depends(get_db),
+):
+    return CheckoutService(db).checkout_recommendation(
+        merchant_id
+    )
 
 # ---------------- Razorpay ----------------
 

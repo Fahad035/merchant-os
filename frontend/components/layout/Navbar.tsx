@@ -8,7 +8,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border/60 bg-background/80 px-6 backdrop-blur-md">
       <div>
         <h1 className="text-lg font-semibold tracking-tight">Dashboard</h1>
-        <p className="text-sm text-muted-foreground">Welcome back 👋</p>
+        <p className="text-sm text-muted-foreground">Welcome back</p>
       </div>
 
       <div className="flex items-center gap-4">

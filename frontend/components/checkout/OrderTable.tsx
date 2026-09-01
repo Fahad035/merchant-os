@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 import { CheckoutOrder } from "@/types/checkout";
 
@@ -15,63 +16,47 @@ interface Props {
   orders: CheckoutOrder[];
 }
 
-export default function OrderTable({
-  orders,
-}: Props) {
+export default function OrderTable({ orders }: Props) {
   return (
-    <Table>
-
-      <TableHeader>
-
-        <TableRow>
-
-          <TableHead>Customer</TableHead>
-
-          <TableHead>Status</TableHead>
-
-          <TableHead>Payment</TableHead>
-
-          <TableHead>Amount</TableHead>
-
-        </TableRow>
-
-      </TableHeader>
-
-      <TableBody>
-
-        {orders.slice(0, 20).map((order) => (
-          <TableRow key={order.id}>
-
-            <TableCell>
-              {order.customer_name}
-            </TableCell>
-
-            <TableCell>
-              {order.status}
-            </TableCell>
-
-            <TableCell>
-
-              <PaymentBadge
-                status={
-                  order.payment_status
-                }
-              />
-
-            </TableCell>
-
-            <TableCell>
-              ₹
-              {Number(
-                order.total_amount
-              ).toLocaleString()}
-            </TableCell>
-
+    <>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Customer</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Payment</TableHead>
+            <TableHead>Amount</TableHead>
           </TableRow>
-        ))}
+        </TableHeader>
 
-      </TableBody>
+        <TableBody>
+          {orders.slice(0, 10).map((order) => (
+            <TableRow key={order.id}>
+              <TableCell>{order.customer_name}</TableCell>
 
-    </Table>
+              <TableCell>{order.status}</TableCell>
+
+              <TableCell>
+                <PaymentBadge status={order.payment_status} />
+              </TableCell>
+
+              <TableCell>
+                ₹{Number(order.total_amount).toLocaleString()}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
+        <span>
+          Showing {Math.min(orders.length, 10)} of {orders.length} orders
+        </span>
+
+        <Button variant="outline">
+          View All Orders
+        </Button>
+      </div>
+    </>
   );
 }

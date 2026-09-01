@@ -11,8 +11,6 @@ import { Button } from "@/components/ui/button";
 
 import { AuditLog } from "@/types/audit";
 
-import AuditStatusBadge from "./AuditStatusBadge";
-
 interface Props {
   logs: AuditLog[];
   onView?: (log: AuditLog) => void;
@@ -24,79 +22,51 @@ export default function AuditTable({
 }: Props) {
   return (
     <Table>
-
       <TableHeader>
-
         <TableRow>
+          <TableHead>Event</TableHead>
 
-          <TableHead>Action</TableHead>
+          <TableHead>Actor</TableHead>
 
-          <TableHead>Status</TableHead>
+          <TableHead>Details</TableHead>
 
           <TableHead>Time</TableHead>
 
           <TableHead></TableHead>
-
         </TableRow>
-
       </TableHeader>
 
       <TableBody>
-
-        {logs.map((log) => (
-
+        {logs.slice(0, 20).map((log) => (
           <TableRow key={log.id}>
-
-            <TableCell>
-
-              <div>
-
-                <div className="font-medium">
-                  {log.action}
-                </div>
-
-                <div className="text-xs text-muted-foreground mt-1">
-                  {log.reasoning}
-                </div>
-
-              </div>
-
+            <TableCell className="font-medium">
+              {log.event_type}
             </TableCell>
 
             <TableCell>
+              {log.actor}
+            </TableCell>
 
-              <AuditStatusBadge
-                status={log.status}
-              />
-
+            <TableCell className="max-w-md truncate">
+              {log.details}
             </TableCell>
 
             <TableCell>
-              {new Date(
-                log.created_at
-              ).toLocaleString()}
+              {new Date(log.created_at).toLocaleString()}
             </TableCell>
 
             <TableCell>
-
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() =>
-                  onView?.(log)
-                }
+                onClick={() => onView?.(log)}
               >
                 View
               </Button>
-
             </TableCell>
-
           </TableRow>
-
         ))}
-
       </TableBody>
-
     </Table>
   );
 }

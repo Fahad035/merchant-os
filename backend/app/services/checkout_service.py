@@ -2,10 +2,12 @@ from sqlalchemy.orm import Session
 
 from app.repositories.order_repository import OrderRepository
 
+from app.models.ai_recommendation import AIRecommendation
 
 class CheckoutService:
 
     def __init__(self, db: Session):
+        self.db = db
         self.repository = OrderRepository(db)
 
     def dashboard(self, merchant_id):
@@ -45,3 +47,31 @@ class CheckoutService:
                 for o in orders
             ],
         }
+
+    def checkout_recommendation(self, merchant_id):
+        recommendation = (
+            self.db.query(AIRecommendation)
+            .filter(
+            AIRecommendation.merchant_id == merchant_id,
+            AIRecommendation.status == "pending",
+        )
+        .order_by(AIRecommendation.created_at.desc())
+        .first()
+    )
+
+        if recommendation is None:
+            return {
+            "id": "",
+            "title": "No recommendation available",
+            "explanation": "",
+            "expected_revenue": 0,
+            "confidence": 0,
+        }
+
+        return {
+        "id": str(recommendation.id),
+        "title": recommendation.title,
+        "explanation": recommendation.explanation,
+        "expected_revenue": float(recommendation.expected_revenue),
+        "confidence": recommendation.confidence,
+    }

@@ -3,11 +3,13 @@ export interface AuditLog {
 
   merchant_id: string;
 
-  action: string;
+  recommendation_id: string;
 
-  reasoning: string;
+  event_type: string;
 
-  status: string;
+  actor: string;
+
+  details: string;
 
   created_at: string;
 }

@@ -23,47 +23,27 @@ class RecommendationExecutionService:
 
     # --------------------------------------------------
 
-    def approve(
-        self,
-        recommendation_id: UUID,
-    ):
+    def approve(self, recommendation_id):
 
         recommendation = self.recommendations.get(
             recommendation_id
         )
 
         if recommendation is None:
-
-            raise ValueError(
-                "Recommendation not found."
-            )
-
-        action = ActionFactory.create(
-            recommendation.action_type,
-            self.db,
-        )
-
-        result = action.execute(
-            recommendation
-        )
+            raise ValueError("Recommendation not found.")
 
         recommendation.status = "approved"
 
         self.db.commit()
 
         self.audit_logs.create(
-
             merchant_id=recommendation.merchant_id,
-
             recommendation_id=recommendation.id,
-
             action="approved",
-
-            details=result["message"],
+            details="Merchant approved recommendation.",
         )
 
         return recommendation
-
     # --------------------------------------------------
 
     def reject(
@@ -97,3 +77,41 @@ class RecommendationExecutionService:
         )
 
         return recommendation
+
+    def execute(self, recommendation_id):
+
+        recommendation = self.recommendations.get(
+            recommendation_id
+        )
+
+        if recommendation is None:
+         raise ValueError("Recommendation not found.")
+
+        if recommendation.status != "approved":
+            raise ValueError(
+                "Recommendation must be approved first."
+            )
+
+        action = ActionFactory.create(
+            recommendation.action_type,
+            self.db,
+        )
+
+        result = action.execute(
+            recommendation
+        )
+
+        if result["success"]:
+
+            recommendation.status = "executed"
+
+        self.db.commit()
+
+        self.audit_logs.create(
+            merchant_id=recommendation.merchant_id,
+            recommendation_id=recommendation.id,
+            action="executed" if result["success"] else "failed",
+            details=result["message"],
+        )
+
+        return result

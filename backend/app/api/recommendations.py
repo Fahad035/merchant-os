@@ -89,3 +89,26 @@ def reject(
             status_code=404,
             detail=str(exc),
         )
+
+@router.post("/execute")
+def execute(
+    request: RecommendationActionRequest,
+    db: Session = Depends(get_db),
+):
+
+    service = RecommendationExecutionService(db)
+
+    try:
+
+        result = service.execute(
+            request.recommendation_id
+        )
+
+        return result
+
+    except ValueError as exc:
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(exc),
+        )

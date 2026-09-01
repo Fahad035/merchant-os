@@ -6,33 +6,28 @@ import recommendationService, {
   Recommendation,
 } from "@/services/recommendation";
 
+import { executeRecommendation } from "@/lib/api";
+
 export function useRecommendations() {
-  const [recommendations, setRecommendations] =
-    useState<Recommendation[]>([]);
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [error, setError] =
-    useState(false);
+  const [error, setError] = useState(false);
 
   async function loadRecommendations() {
     try {
       setLoading(true);
       setError(false);
 
-      const merchantId =
-        localStorage.getItem("merchant_id");
+      const merchantId = localStorage.getItem("merchant_id");
 
       if (!merchantId) {
         setRecommendations([]);
         return;
       }
 
-      const data =
-        await recommendationService.getRecommendations(
-          merchantId
-        );
+      const data = await recommendationService.getRecommendations(merchantId);
 
       setRecommendations(data);
     } catch (err) {
@@ -50,27 +45,29 @@ export function useRecommendations() {
   }, []);
 
   async function approve(id: string) {
-    await recommendationService.approveRecommendation(
-      id
-    );
+    await recommendationService.approveRecommendation(id);
 
     await loadRecommendations();
   }
 
   async function reject(id: string) {
-    await recommendationService.rejectRecommendation(
-      id
-    );
+    await recommendationService.rejectRecommendation(id);
 
     await loadRecommendations();
   }
 
-  return {
-    recommendations,
-    loading,
-    error,
-    refresh: loadRecommendations,
-    approve,
-    reject,
+  const execute = async (id: string) => {
+    await executeRecommendation(id);
+    await loadRecommendations();
   };
+
+  return {
+  recommendations,
+  loading,
+  error,
+  refresh: loadRecommendations,
+  approve,
+  reject,
+  execute,
+};
 }

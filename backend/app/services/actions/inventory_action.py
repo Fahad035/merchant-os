@@ -1,3 +1,4 @@
+from app.models.product import Product
 from app.services.actions.base_action import BaseAction
 
 
@@ -5,11 +6,23 @@ class InventoryAction(BaseAction):
 
     def execute(self, recommendation):
 
-        recommendation.status = "approved"
+        products = (
+            self.db.query(Product)
+            .filter(
+                Product.merchant_id ==
+                recommendation.merchant_id
+            )
+            .all()
+        )
 
-        self.db.commit()
+        low_stock = [
+            p.name
+            for p in products
+            if p.stock < 20
+        ]
 
         return {
             "success": True,
-            "message": "Inventory action executed.",
+            "message":
+                f"{len(low_stock)} low stock products detected.",
         }

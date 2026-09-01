@@ -6,6 +6,10 @@ import {
   Inbox,
 } from "lucide-react";
 
+import {
+    executeRecommendation,
+} from "@/lib/api";
+
 import { Button } from "@/components/ui/button";
 
 import RecommendationCard from "./RecommendationCard";
@@ -23,7 +27,8 @@ export default function AIActionCenter() {
     refresh,
     approve,
     reject,
-  } = useRecommendations();
+    execute,
+} = useRecommendations();
 
   return (
 
@@ -147,6 +152,7 @@ export default function AIActionCenter() {
                 recommendation={recommendation}
                 onApprove={approve}
                 onReject={reject}
+                onExecute={execute}
               />
 
             ))}

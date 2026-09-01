@@ -23,6 +23,14 @@ export default function ChatWindow({
 }: ChatWindowProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
+  const quickActions = [
+    "Summarize my business performance.",
+    "How can I increase revenue?",
+    "Suggest a marketing campaign.",
+    "Which products should I bundle?",
+    "Which products need restocking?",
+  ];
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
       behavior: "smooth",
@@ -31,13 +39,10 @@ export default function ChatWindow({
 
   return (
     <div className="flex h-full flex-col bg-background">
-
       {/* Header */}
 
       <div className="border-b px-6 py-4">
-        <h1 className="text-xl font-bold">
-          MerchantOS AI
-        </h1>
+        <h1 className="text-xl font-bold">MerchantOS AI</h1>
 
         <p className="text-sm text-muted-foreground">
           Your Autonomous Commerce Copilot
@@ -47,61 +52,37 @@ export default function ChatWindow({
       {/* Messages */}
 
       <div className="flex-1 overflow-y-auto px-6 py-6">
-
         {messages.length === 0 && !loading && (
           <div className="mx-auto mt-24 max-w-xl text-center">
-
-            <h2 className="mb-4 text-3xl font-bold">
-              Welcome to MerchantOS
-            </h2>
+            <h2 className="mb-4 text-3xl font-bold">Welcome to MerchantOS</h2>
 
             <p className="text-muted-foreground">
               Ask me anything about your store.
             </p>
 
-            <div className="mt-8 space-y-3">
-
-              <div className="rounded-lg border p-4 text-left">
-                How can I increase my revenue this month?
-              </div>
-
-              <div className="rounded-lg border p-4 text-left">
-                Which products should I bundle?
-              </div>
-
-              <div className="rounded-lg border p-4 text-left">
-                Analyze my recent sales performance.
-              </div>
-              <div className="rounded-lg border p-4 text-left">
-                Suggest a marketing campaign.
-              </div>
-              <div className="rounded-lg border p-4 text-left">
-                Which products need restocking?
-              </div>
-              <div className="rounded-lg border p-4 text-left">
-                Summarize my business performance.
-              </div>
-
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              {quickActions.map((prompt) => (
+                <button
+                  key={prompt}
+                  onClick={() => onSend(prompt)}
+                  className="rounded-full border px-4 py-2 text-sm transition hover:bg-primary hover:text-primary-foreground"
+                >
+                  {prompt}
+                </button>
+              ))}
             </div>
-
           </div>
         )}
 
         <div className="mx-auto flex max-w-4xl flex-col gap-5">
-
           {messages.map((message) => (
-            <ChatBubble
-              key={message.id}
-              message={message}
-            />
+            <ChatBubble key={message.id} message={message} />
           ))}
 
           {loading && <TypingIndicator />}
 
           <div ref={bottomRef} />
-
         </div>
-
       </div>
 
       {/* Error */}
@@ -114,11 +95,7 @@ export default function ChatWindow({
 
       {/* Input */}
 
-      <ChatInput
-        loading={loading}
-        onSend={onSend}
-      />
-
+      <ChatInput loading={loading} onSend={onSend} />
     </div>
   );
 }

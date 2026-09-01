@@ -1,14 +1,15 @@
 import { Badge } from "@/components/ui/badge";
 
-interface Props {
-  status: string;
-}
+type Props = {
+  status?: string;
+};
 
-export default function PaymentBadge({
-  status,
-}: Props) {
-  switch (status.toLowerCase()) {
+export default function PaymentBadge({ status }: Props) {
+  const value = (status ?? "pending").toLowerCase();
+
+  switch (value) {
     case "paid":
+    case "completed":
       return (
         <Badge className="bg-green-600 hover:bg-green-600">
           Paid
@@ -32,7 +33,7 @@ export default function PaymentBadge({
     default:
       return (
         <Badge variant="outline">
-          {status}
+          {status ?? "Unknown"}
         </Badge>
       );
   }

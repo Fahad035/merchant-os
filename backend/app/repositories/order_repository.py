@@ -1,7 +1,11 @@
+from uuid import UUID
+
 from sqlalchemy.orm import Session, joinedload
+
 from app.models.order import Order
-from app.models.order_item import OrderItem  # 👈 Added missing import
+from app.models.order_item import OrderItem
 from app.repositories.base_repository import BaseRepository
+
 
 class OrderRepository(BaseRepository[Order]):
     def __init__(self, db: Session):
@@ -14,12 +18,12 @@ class OrderRepository(BaseRepository[Order]):
             .all()
         )
 
-    def get_by_merchant(self, merchant_id: int): # 👈 Added type hinting
+    def get_by_merchant(self, merchant_id: UUID):
         return (
             self.db.query(Order)
             .options(
-                joinedload(Order.items)
-                .joinedload(OrderItem.product)
+                joinedload(Order.customer),
+                joinedload(Order.items).joinedload(OrderItem.product),
             )
             .filter(Order.merchant_id == merchant_id)
             .all()

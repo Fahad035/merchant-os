@@ -1,40 +1,33 @@
+from pydantic import BaseModel
 from uuid import UUID
 
-from pydantic import BaseModel
-from pydantic import ConfigDict
 
-
-class CheckoutOrderResponse(BaseModel):
-    model_config = ConfigDict(
-        from_attributes=True
-    )
-
-    id: UUID
+class CreateOrderRequest(BaseModel):
 
     merchant_id: UUID
 
-    customer_name: str
-
-    total_amount: float
-
-    payment_status: str
-
-    status: str
+    amount: float
 
 
-class CheckoutSummaryResponse(BaseModel):
-    total_orders: int
+class CreateOrderResponse(BaseModel):
 
-    completed_orders: int
+    order_id: str
 
-    pending_orders: int
+    amount: int
 
-    total_revenue: float
+    currency: str
 
-    ai_expected_revenue: float
+    key: str
 
 
-class CheckoutDashboardResponse(BaseModel):
-    summary: CheckoutSummaryResponse
+class VerifyPaymentRequest(BaseModel):
 
-    orders: list[CheckoutOrderResponse]
+    merchant_id: UUID
+
+    recommendation_id: UUID | None = None
+
+    razorpay_order_id: str
+
+    razorpay_payment_id: str
+
+    razorpay_signature: str

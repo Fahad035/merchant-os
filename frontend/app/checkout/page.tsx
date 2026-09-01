@@ -1,5 +1,7 @@
 "use client";
 
+import Script from "next/script";
+
 import { Card } from "@/components/ui/card";
 
 import { useCheckout } from "@/hooks/useCheckout";
@@ -44,106 +46,118 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="space-y-8 p-8">
+    <>
+      <Script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        strategy="afterInteractive"
+      />
 
-      {/* Header */}
+      <div className="space-y-8 p-8">
 
-      <div className="flex items-center justify-between">
+        {/* Header */}
 
-        <div>
+        <div className="flex items-center justify-between">
 
-          <h1 className="text-3xl font-bold">
-            Checkout
-          </h1>
+          <div>
 
-          <p className="mt-2 text-muted-foreground">
-            Monitor customer orders, payments and AI checkout opportunities.
-          </p>
+            <h1 className="text-3xl font-bold">
+              Checkout
+            </h1>
+
+            <p className="mt-2 text-muted-foreground">
+              Monitor customer orders, payments and AI checkout opportunities.
+            </p>
+
+          </div>
 
         </div>
 
-      </div>
+        {/* Stats */}
 
-      {/* Stats */}
-
-      <CheckoutStats
-        totalOrders={totalOrders}
-        completedOrders={completedOrders}
-        pendingOrders={pendingOrders}
-        totalRevenue={totalRevenue}
-      />
-
-      {/* AI Recommendation */}
-
-      <AIUpsellCard />
-
-      {/* Revenue Summary */}
-
-      <Card className="p-6 border-primary">
-
-        <h2 className="text-xl font-semibold">
-          🤖 AI Revenue Opportunity
-        </h2>
-
-        <p className="mt-3 text-muted-foreground">
-          AI predicts an additional revenue of
-          <span className="font-semibold">
-            {" "}
-            ₹{aiRevenue.toLocaleString()}
-          </span>
-          {" "}by enabling intelligent checkout upsells.
-        </p>
-
-      </Card>
-
-      {/* Search */}
-
-      <OrderSearch
-        value={search}
-        onChange={setSearch}
-      />
-
-      {/* Recent Orders */}
-
-      <div>
-
-        <h2 className="mb-5 text-2xl font-semibold">
-          Recent Orders
-        </h2>
-
-        {orders.length === 0 ? (
-          <Card className="p-10 text-center text-muted-foreground">
-            No orders found.
-          </Card>
-        ) : (
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-
-            {orders.slice(0, 6).map((order) => (
-              <OrderCard
-                key={order.id}
-                order={order}
-              />
-            ))}
-
-          </div>
-        )}
-
-      </div>
-
-      {/* Orders Table */}
-
-      <Card className="p-6">
-
-        <h2 className="mb-5 text-xl font-semibold">
-          Order History
-        </h2>
-
-        <OrderTable
-          orders={orders}
+        <CheckoutStats
+          totalOrders={totalOrders}
+          completedOrders={completedOrders}
+          pendingOrders={pendingOrders}
+          totalRevenue={totalRevenue}
         />
 
-      </Card>
+        {/* AI Upsell */}
 
-    </div>
+        <AIUpsellCard />
+
+        {/* Revenue */}
+
+        <Card className="border-primary p-6">
+
+          <h2 className="text-xl font-semibold">
+             AI Revenue Opportunity
+          </h2>
+
+          <p className="mt-3 text-muted-foreground">
+            AI predicts an additional revenue of{" "}
+            <span className="font-semibold">
+              ₹{aiRevenue.toLocaleString()}
+            </span>{" "}
+            by enabling intelligent checkout upsells.
+          </p>
+
+        </Card>
+
+        {/* Search */}
+
+        <OrderSearch
+          value={search}
+          onChange={setSearch}
+        />
+
+        {/* Recent Orders */}
+
+        <div>
+
+          <h2 className="mb-5 text-2xl font-semibold">
+            Recent Orders
+          </h2>
+
+          {orders.length === 0 ? (
+
+            <Card className="p-10 text-center text-muted-foreground">
+              No orders found.
+            </Card>
+
+          ) : (
+
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+
+              {orders.slice(0, 6).map((order) => (
+
+                <OrderCard
+                  key={order.id}
+                  order={order}
+                />
+
+              ))}
+
+            </div>
+
+          )}
+
+        </div>
+
+        {/* Orders Table */}
+
+        <Card className="p-6">
+
+          <h2 className="mb-5 text-xl font-semibold">
+            Order History
+          </h2>
+
+          <OrderTable
+            orders={orders}
+          />
+
+        </Card>
+
+      </div>
+    </>
   );
 }

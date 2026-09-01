@@ -4,6 +4,8 @@ from app.repositories.audit_repository import (
     AuditRepository,
 )
 
+from app.models.audit_log import ( AuditLog )
+
 
 class AuditService:
 
@@ -46,3 +48,28 @@ class AuditService:
 
     def get(self, audit_id):
         return self.repository.get_by_id(audit_id)
+
+    def create_log(
+        self,
+        merchant_id,
+        recommendation_id,
+        event_type,
+        actor,
+        details,
+    ):
+
+        log = AuditLog(
+            merchant_id=merchant_id,
+            recommendation_id=recommendation_id,
+            event_type=event_type,
+            actor=actor,
+            details=details,
+        )
+
+        self.db.add(log)
+
+        self.db.commit()
+
+        self.db.refresh(log)
+
+        return log

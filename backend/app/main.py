@@ -9,6 +9,7 @@ from app.api.checkout import ( router as checkout_router, )
 from app.api.audit import ( router as audit_router, )
 from app.api.settings import ( router as settings_router,)
 from app.api.recommendations import ( router as recommendation_router, )
+from app.api.merchant import router as merchant_router
 
 app = FastAPI(
     title="MerchantOS API",
@@ -33,6 +34,7 @@ app.include_router(checkout_router)
 app.include_router(audit_router)
 app.include_router(settings_router)
 app.include_router(recommendation_router)
+app.include_router(merchant_router)
 
 @app.get("/")
 def root():

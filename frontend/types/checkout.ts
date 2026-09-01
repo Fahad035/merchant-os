@@ -1,15 +1,9 @@
 export interface CheckoutOrder {
   id: string;
-
-  merchant_id: string;
-
+  order_number: string;
   customer_name: string;
-
-  total_amount: number;
-
-  payment_status: string;
-
   status: string;
+  amount: number;
 }
 
 export interface CheckoutSummary {

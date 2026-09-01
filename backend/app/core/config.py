@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     # -----------------------------
     GEMINI_API_KEY: str
 
+    RAZORPAY_KEY_ID: str
+    RAZORPAY_KEY_SECRET: str
+
     model_config = SettingsConfigDict(
         env_file=".env",
         case_sensitive=True,

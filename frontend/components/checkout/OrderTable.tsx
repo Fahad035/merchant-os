@@ -39,7 +39,7 @@ export default function OrderTable({
 
       <TableBody>
 
-        {orders.map((order) => (
+        {orders.slice(0, 20).map((order) => (
           <TableRow key={order.id}>
 
             <TableCell>

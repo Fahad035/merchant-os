@@ -1,9 +1,13 @@
 export interface CheckoutOrder {
   id: string;
-  order_number: string;
+
   customer_name: string;
+
   status: string;
-  amount: number;
+
+  payment_status: string;
+
+  total_amount: number;
 }
 
 export interface CheckoutSummary {

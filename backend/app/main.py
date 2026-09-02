@@ -21,6 +21,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
+        "https://merchant-os-flax.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],

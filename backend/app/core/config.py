@@ -6,44 +6,32 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     APP_NAME: str = "MerchantOS"
 
-    DATABASE_HOST: str
-    DATABASE_PORT: int
-
-    DATABASE_NAME: str
-    DATABASE_USER: str
-    DATABASE_PASSWORD: str
-
+    # Database
     DATABASE_URL: str
 
-    # -----------------------------
     # Gemini
-    # -----------------------------
     GEMINI_API_KEY: str
 
+    # Razorpay
     RAZORPAY_KEY_ID: str
     RAZORPAY_KEY_SECRET: str
 
-    # -----------------------------
-    # Auth / JWT
-    # -----------------------------
-    # NOTE: these have dev-friendly defaults so your .env doesn't need to
-    # change right away. Override JWT_SECRET_KEY before deploying anywhere
-    # reachable by others.
-    JWT_SECRET_KEY: str = "dev-only-change-this-secret-key"
+    # JWT
+    JWT_SECRET_KEY: str
     JWT_ALGORITHM: str = "HS256"
-    JWT_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
+    JWT_EXPIRE_MINUTES: int = 60 * 24 * 7
+
     COOKIE_NAME: str = "merchantos_token"
-    COOKIE_SECURE: bool = False  # set True once served over HTTPS
+    COOKIE_SECURE: bool = False
 
     model_config = SettingsConfigDict(
         env_file=".env",
-        case_sensitive=True,
         extra="ignore",
     )
 
 
 @lru_cache
-def get_settings() -> Settings:
+def get_settings():
     return Settings()
 
 

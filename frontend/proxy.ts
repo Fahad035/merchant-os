@@ -14,8 +14,9 @@ const PROTECTED_PREFIXES = [
 
 const AUTH_PAGES = ["/login", "/signup"];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
   const hasSession = Boolean(
     request.cookies.get(COOKIE_NAME)?.value
   );
@@ -23,6 +24,7 @@ export function middleware(request: NextRequest) {
   const isProtected = PROTECTED_PREFIXES.some((prefix) =>
     pathname.startsWith(prefix)
   );
+
   const isAuthPage = AUTH_PAGES.some((page) =>
     pathname.startsWith(page)
   );

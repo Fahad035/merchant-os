@@ -1,9 +1,33 @@
 "use client";
 
-import { Bell, Search } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Bell, LogOut, Search } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useAuth } from "@/hooks/useAuth";
+
+function initialsFor(name: string) {
+  const parts = name.trim().split(/\s+/);
+  const first = parts[0]?.[0] ?? "";
+  const last = parts.length > 1 ? parts[parts.length - 1][0] : "";
+  return (first + last).toUpperCase() || "M";
+}
 
 export default function Navbar() {
+  const { merchant, logout } = useAuth();
+  const router = useRouter();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  async function handleLogout() {
+    setLoggingOut(true);
+    try {
+      await logout();
+      router.push("/login");
+    } finally {
+      setLoggingOut(false);
+    }
+  }
+
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border/60 bg-background/80 px-6 backdrop-blur-md">
       <div>
@@ -25,14 +49,28 @@ export default function Navbar() {
         <div className="flex items-center gap-3 border-l border-border/60 pl-4">
           <Avatar className="ring-2 ring-primary/20">
             <AvatarFallback className="brand-gradient text-white">
-              MF
+              {merchant ? initialsFor(merchant.owner_name) : "…"}
             </AvatarFallback>
           </Avatar>
 
           <div className="hidden sm:block">
-            <p className="text-sm font-medium leading-tight">Md Fahad</p>
-            <p className="text-xs text-muted-foreground">Merchant</p>
+            <p className="text-sm font-medium leading-tight">
+              {merchant?.owner_name ?? "Loading…"}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {merchant?.business_name ?? ""}
+            </p>
           </div>
+
+          <button
+            onClick={handleLogout}
+            disabled={loggingOut}
+            aria-label="Log out"
+            title="Log out"
+            className="ml-1 rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-destructive disabled:opacity-50"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
         </div>
       </div>
     </header>

@@ -17,7 +17,12 @@ export function useDashboard() {
       setLoading(true);
       setError(false);
 
-      const merchantId = process.env.NEXT_PUBLIC_MERCHANT_ID!;
+      // Prefer the logged-in merchant (set by useAuth on login/signup).
+      // Falls back to the env var so this still works if auth hasn't
+      // run yet (e.g. a page refresh before the session check resolves).
+      const merchantId =
+        localStorage.getItem("merchant_id") ||
+        process.env.NEXT_PUBLIC_MERCHANT_ID!;
 
       const data = await dashboardService.getDashboard(merchantId);
 

@@ -40,6 +40,14 @@ class Merchant(BaseModel):
         nullable=False,
     )
 
+    # Added for login/signup. Nullable so existing seeded merchant rows
+    # (created before auth existed) don't break — they simply can't log
+    # in until a password is set for them.
+    hashed_password: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True,
+    )
+
     products = relationship(
         "Product",
         back_populates="merchant",

@@ -6,8 +6,18 @@ import { ChatMessage, Conversation } from "@/types/chat";
 
 import { sendMessage } from "@/lib/chat-api";
 
-const DEMO_MERCHANT_ID =
-  process.env.NEXT_PUBLIC_MERCHANT_ID || "REPLACE_WITH_YOUR_MERCHANT_UUID";
+// Prefer the logged-in merchant (set by useAuth on login/signup) over the
+// env var. Resolved inside send() rather than at module scope so this
+// never touches `localStorage` during server-side rendering.
+function resolveMerchantId(): string {
+  if (typeof window !== "undefined") {
+    const stored = localStorage.getItem("merchant_id");
+    if (stored) return stored;
+  }
+  return (
+    process.env.NEXT_PUBLIC_MERCHANT_ID || "REPLACE_WITH_YOUR_MERCHANT_UUID"
+  );
+}
 
 export function useChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -26,7 +36,7 @@ export function useChat() {
 
     try {
       const response = await sendMessage({
-        merchant_id: DEMO_MERCHANT_ID,
+        merchant_id: resolveMerchantId(),
         conversation_id: conversation?.id,
         message: content,
       });

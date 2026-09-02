@@ -40,15 +40,15 @@ export default function AuditTable({
         {logs.slice(0, 20).map((log) => (
           <TableRow key={log.id}>
             <TableCell className="font-medium">
-              {log.event_type}
+              {log.action}
             </TableCell>
 
             <TableCell>
-              {log.actor}
+              {log.status}
             </TableCell>
 
             <TableCell className="max-w-md truncate">
-              {log.details}
+              {log.reasoning}
             </TableCell>
 
             <TableCell>

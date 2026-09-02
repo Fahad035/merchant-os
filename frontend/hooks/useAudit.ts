@@ -54,9 +54,9 @@ export function useAudit() {
 
     return logs.filter((log) => {
       return (
-        log.event_type.toLowerCase().includes(term) ||
-        log.details.toLowerCase().includes(term) ||
-        log.actor.toLowerCase().includes(term)
+        log.action.toLowerCase().includes(term) ||
+        log.reasoning.toLowerCase().includes(term) ||
+        log.status.toLowerCase().includes(term)
       );
     });
   }, [logs, search]);

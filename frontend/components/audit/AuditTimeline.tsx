@@ -52,12 +52,12 @@ export default function AuditTimeline({
             key={log.id}
             className="flex gap-4"
           >
-            {icon(log.event_type)}
+            {icon(log.status)}
 
             <div className="flex-1">
               <div className="flex justify-between">
                 <h3 className="font-medium">
-                  {log.event_type}
+                  {log.action}
                 </h3>
 
                 <span className="text-xs text-muted-foreground">
@@ -69,12 +69,12 @@ export default function AuditTimeline({
 
               <p className="mt-1 text-sm">
                 <span className="font-medium">
-                  {log.actor}
+                  {log.status}
                 </span>
               </p>
 
               <p className="text-sm text-muted-foreground">
-                {log.details}
+                {log.reasoning}
               </p>
             </div>
           </div>

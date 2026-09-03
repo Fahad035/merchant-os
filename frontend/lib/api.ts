@@ -1,9 +1,10 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL:
-    process.env.NEXT_PUBLIC_API_URL ||
-    "http://localhost:8000",
+  // Relative path — resolved by the rewrite in next.config.ts. The
+  // browser only ever talks to its own origin, so the auth cookie set
+  // in the response is scoped to *this* domain, not the backend's.
+  baseURL: "/api",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",

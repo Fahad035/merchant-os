@@ -1,12 +1,17 @@
 import axios from "axios";
-import { API_BASE_URL } from "@/lib/constants";
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  // Relative path — resolved by the rewrite in next.config.ts, same as
+  // lib/api.ts. Previously pointed straight at API_BASE_URL (the raw
+  // backend origin) with no withCredentials, so cookie-based auth never
+  // worked for anything routed through this client (dashboard,
+  // recommendations) even before the cross-domain cookie issue.
+  baseURL: "/api",
   timeout: 30000,
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 api.interceptors.request.use(

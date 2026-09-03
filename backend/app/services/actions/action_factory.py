@@ -11,17 +11,14 @@ class ActionFactory:
 
         mapping = {
             "bundle": BundleAction,
+            "cross_sell": BundleAction,
+            "upsell": BundleAction,
             "campaign": CampaignAction,
             "pricing": PricingAction,
             "inventory": InventoryAction,
-            "cross_sell": BundleAction,
         }
 
-        action = mapping.get(action_type)
-
-        if action is None:
-            raise ValueError(
-                f"Unsupported action type: {action_type}"
-            )
-
-        return action(db)
+        return mapping.get(
+            action_type.lower(),
+            CampaignAction,   # default fallback
+        )(db)

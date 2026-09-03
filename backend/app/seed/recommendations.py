@@ -40,7 +40,8 @@ ACTIONS = [
 STATUS = [
     "pending",
     "approved",
-    "completed",
+    "executed",
+    "rejected",
 ]
 
 

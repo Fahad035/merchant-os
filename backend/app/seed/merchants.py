@@ -1,36 +1,42 @@
-from faker import Faker
 from sqlalchemy.orm import Session
 
 from app.models.merchant import Merchant
 
-fake = Faker("en_IN")
 
-
-INDUSTRIES = [
-    "Sports & Fitness",
-    "Fashion",
-    "Electronics",
-    "Furniture",
-    "Books",
-    "Beauty",
-    "Food",
-    "Healthcare",
-]
+DEMO_EMAIL = "fahadjdk345671@gmail.com"
 
 
 def seed_merchant(db: Session) -> Merchant:
-    merchant = Merchant(
-        business_name=fake.company(),
-        owner_name=fake.name(),
-        email=fake.unique.email(),
-        phone=fake.msisdn()[:10],
-        industry=fake.random_element(INDUSTRIES),
+    """
+    Use the existing demo merchant account.
+
+    Sign up once using:
+        fahadjdk345671@gmail.com
+
+    All seeded data (products, customers, orders, campaigns,
+    recommendations, etc.) will belong to this account.
+    """
+
+    merchant = (
+        db.query(Merchant)
+        .filter(Merchant.email == DEMO_EMAIL)
+        .first()
     )
 
-    db.add(merchant)
-    db.commit()
-    db.refresh(merchant)
+    if merchant is None:
+        raise Exception(
+            f"""
+Demo merchant not found.
 
-    print(f"✔ Seeded Merchant: {merchant.business_name}")
+Please sign up first using:
+
+Email: {DEMO_EMAIL}
+
+Then run the seed again.
+"""
+        )
+
+    print(f"✔ Using existing merchant: {merchant.business_name}")
+    print(f"✔ Merchant ID: {merchant.id}")
 
     return merchant

@@ -38,7 +38,7 @@ def main():
         db.query(Order).delete()
         db.query(Customer).delete()
         db.query(Product).delete()
-        db.query(Merchant).delete()
+        # db.query(Merchant).delete()
 
         db.commit()
 

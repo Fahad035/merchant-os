@@ -148,7 +148,7 @@ export default function CatalogPage() {
           <div>
 
             <h2 className="text-xl font-semibold">
-              🤖 AI Bundle Opportunity
+              AI Bundle Opportunity
             </h2>
 
             <p className="text-muted-foreground mt-2">

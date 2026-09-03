@@ -90,7 +90,7 @@ export default function AuditPage() {
       <Card className="border-primary p-6">
 
         <h2 className="text-xl font-semibold">
-          🤖 AI Governance
+          AI Governance
         </h2>
 
         <p className="mt-3 text-muted-foreground">

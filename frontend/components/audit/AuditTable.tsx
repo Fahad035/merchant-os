@@ -32,7 +32,7 @@ export default function AuditTable({
 
           <TableHead>Time</TableHead>
 
-          <TableHead></TableHead>
+          <TableHead />
         </TableRow>
       </TableHeader>
 
@@ -40,15 +40,15 @@ export default function AuditTable({
         {logs.slice(0, 20).map((log) => (
           <TableRow key={log.id}>
             <TableCell className="font-medium">
-              {log.action}
+              {log.event_type}
             </TableCell>
 
             <TableCell>
-              {log.status}
+              {log.actor}
             </TableCell>
 
             <TableCell className="max-w-md truncate">
-              {log.reasoning}
+              {log.details}
             </TableCell>
 
             <TableCell>

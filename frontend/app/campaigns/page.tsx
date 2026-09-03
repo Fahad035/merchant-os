@@ -90,7 +90,7 @@ export default function CampaignsPage() {
           <div>
 
             <h2 className="text-xl font-semibold">
-              🤖 AI Marketing Insight
+              AI Marketing Insight
             </h2>
 
             <p className="mt-3 text-muted-foreground">

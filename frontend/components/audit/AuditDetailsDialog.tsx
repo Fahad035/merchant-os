@@ -8,16 +8,13 @@ import {
 } from "@/components/ui/dialog";
 
 import { Badge } from "@/components/ui/badge";
-
 import { Card } from "@/components/ui/card";
 
 import { AuditLog } from "@/types/audit";
 
 interface Props {
   open: boolean;
-
   onOpenChange: (open: boolean) => void;
-
   log: AuditLog | null;
 }
 
@@ -36,94 +33,82 @@ export default function AuditDetailsDialog({
       <DialogContent className="max-w-3xl">
 
         <DialogHeader>
-
           <DialogTitle>
-            AI Decision Details
+            Audit Event Details
           </DialogTitle>
-
         </DialogHeader>
 
         <div className="space-y-6">
 
           <Card className="p-5">
-
             <div className="space-y-3">
 
               <h2 className="text-xl font-bold">
-                {log.action}
+                {log.event_type}
               </h2>
 
               <Badge>
-                {log.status}
+                {log.actor}
               </Badge>
 
             </div>
-
           </Card>
 
-          <Card className="p-5 space-y-3">
+          <Card className="space-y-3 p-5">
 
             <h3 className="font-semibold">
-              AI Reasoning
+              Details
             </h3>
 
             <p className="text-muted-foreground">
-              {log.reasoning}
+              {log.details}
             </p>
 
           </Card>
 
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid gap-5 md:grid-cols-2">
 
             <Card className="p-5">
-
               <p className="text-sm text-muted-foreground">
-                Confidence
+                Recommendation ID
               </p>
 
-              <h2 className="mt-2 text-2xl font-bold">
-                91%
-              </h2>
-
+              <p className="mt-2 break-all font-mono text-sm">
+                {log.recommendation_id}
+              </p>
             </Card>
 
             <Card className="p-5">
-
               <p className="text-sm text-muted-foreground">
-                Expected Revenue
+                Merchant ID
               </p>
 
-              <h2 className="mt-2 text-2xl font-bold">
-                ₹32,000
-              </h2>
-
+              <p className="mt-2 break-all font-mono text-sm">
+                {log.merchant_id}
+              </p>
             </Card>
 
             <Card className="p-5">
-
               <p className="text-sm text-muted-foreground">
-                Approval
+                Event Type
               </p>
 
               <Badge className="mt-3">
-                Approved
+                {log.event_type}
               </Badge>
-
             </Card>
 
             <Card className="p-5">
-
               <p className="text-sm text-muted-foreground">
-                Executed
+                Actor
               </p>
 
               <Badge
                 variant="secondary"
                 className="mt-3"
               >
-                Yes
+                {log.actor}
               </Badge>
-
             </Card>
 
           </div>
@@ -137,21 +122,19 @@ export default function AuditDetailsDialog({
             <div className="mt-4 space-y-2">
 
               <div>
-                ✓ AI generated recommendation
+                Event: <strong>{log.event_type}</strong>
               </div>
 
               <div>
-                ✓ Merchant approved
+                Performed by: <strong>{log.actor}</strong>
               </div>
 
               <div>
-                ✓ Executed successfully
+                {log.details}
               </div>
 
-              <div>
-                {new Date(
-                  log.created_at
-                ).toLocaleString()}
+              <div className="text-sm text-muted-foreground">
+                {new Date(log.created_at).toLocaleString()}
               </div>
 
             </div>
@@ -161,7 +144,6 @@ export default function AuditDetailsDialog({
         </div>
 
       </DialogContent>
-
     </Dialog>
   );
 }

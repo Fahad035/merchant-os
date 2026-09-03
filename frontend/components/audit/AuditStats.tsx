@@ -1,8 +1,10 @@
+"use client";
+
 import {
-  Brain,
   CheckCircle2,
   XCircle,
   PlayCircle,
+  FileText,
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
@@ -20,97 +22,59 @@ export default function AuditStats({
   rejected,
   executed,
 }: Props) {
+  const stats = [
+    {
+      title: "Total Events",
+      value: total,
+      icon: FileText,
+    },
+    {
+      title: "Approved",
+      value: approved,
+      icon: CheckCircle2,
+    },
+    {
+      title: "Rejected",
+      value: rejected,
+      icon: XCircle,
+    },
+    {
+      title: "Executed",
+      value: executed,
+      icon: PlayCircle,
+    },
+  ];
+
   return (
-    <div className="grid gap-6 md:grid-cols-4">
+    <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      {stats.map((stat) => {
+        const Icon = stat.icon;
 
-      <Card className="p-6">
+        return (
+          <Card
+            key={stat.title}
+            className="p-6"
+          >
+            <div className="flex items-center justify-between">
 
-        <div className="flex justify-between">
+              <div>
 
-          <div>
+                <p className="text-sm text-muted-foreground">
+                  {stat.title}
+                </p>
 
-            <p className="text-sm text-muted-foreground">
-              AI Decisions
-            </p>
+                <h2 className="mt-2 text-3xl font-bold">
+                  {stat.value}
+                </h2>
 
-            <h2 className="text-3xl font-bold mt-2">
-              {total}
-            </h2>
+              </div>
 
-          </div>
+              <Icon className="h-8 w-8 text-primary" />
 
-          <Brain className="h-9 w-9" />
-
-        </div>
-
-      </Card>
-
-      <Card className="p-6">
-
-        <div className="flex justify-between">
-
-          <div>
-
-            <p className="text-sm text-muted-foreground">
-              Approved
-            </p>
-
-            <h2 className="text-3xl font-bold mt-2">
-              {approved}
-            </h2>
-
-          </div>
-
-          <CheckCircle2 className="h-9 w-9 text-green-600" />
-
-        </div>
-
-      </Card>
-
-      <Card className="p-6">
-
-        <div className="flex justify-between">
-
-          <div>
-
-            <p className="text-sm text-muted-foreground">
-              Rejected
-            </p>
-
-            <h2 className="text-3xl font-bold mt-2">
-              {rejected}
-            </h2>
-
-          </div>
-
-          <XCircle className="h-9 w-9 text-red-600" />
-
-        </div>
-
-      </Card>
-
-      <Card className="p-6">
-
-        <div className="flex justify-between">
-
-          <div>
-
-            <p className="text-sm text-muted-foreground">
-              Executed
-            </p>
-
-            <h2 className="text-3xl font-bold mt-2">
-              {executed}
-            </h2>
-
-          </div>
-
-          <PlayCircle className="h-9 w-9 text-blue-600" />
-
-        </div>
-
-      </Card>
-
+            </div>
+          </Card>
+        );
+      })}
     </div>
   );
 }

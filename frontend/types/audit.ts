@@ -17,7 +17,7 @@ export interface AuditSummary {
   executed: number;
 }
 
-export interface AuditDashboardResponse {
+export interface AuditDashboard {
   summary: AuditSummary;
   logs: AuditLog[];
 }

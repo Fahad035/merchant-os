@@ -1,11 +1,7 @@
-import { Card } from "@/components/ui/card";
+"use client";
 
-import {
-  CheckCircle2,
-  XCircle,
-  PlayCircle,
-  Clock3,
-} from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 import { AuditLog } from "@/types/audit";
 
@@ -13,73 +9,83 @@ interface Props {
   logs: AuditLog[];
 }
 
-function icon(eventType: string) {
-  switch (eventType.toLowerCase()) {
+function badgeVariant(event: string) {
+  switch (event.toLowerCase()) {
     case "approved":
-      return (
-        <CheckCircle2 className="h-5 w-5 text-green-600" />
-      );
+      return "default";
 
     case "rejected":
-      return (
-        <XCircle className="h-5 w-5 text-red-600" />
-      );
+      return "destructive";
 
     case "executed":
-      return (
-        <PlayCircle className="h-5 w-5 text-blue-600" />
-      );
+      return "secondary";
 
     default:
-      return (
-        <Clock3 className="h-5 w-5 text-orange-500" />
-      );
+      return "outline";
   }
 }
 
 export default function AuditTimeline({
   logs,
 }: Props) {
+  if (logs.length === 0) {
+    return (
+      <Card className="p-6 text-center text-muted-foreground">
+        No audit events found.
+      </Card>
+    );
+  }
+
   return (
     <Card className="p-6">
+
       <h2 className="mb-6 text-xl font-semibold">
-        AI Decision Timeline
+        Recent Activity
       </h2>
 
       <div className="space-y-5">
-        {logs.slice(0, 6).map((log) => (
+
+        {logs.slice(0, 10).map((log) => (
           <div
             key={log.id}
             className="flex gap-4"
           >
-            {icon(log.status)}
 
-            <div className="flex-1">
-              <div className="flex justify-between">
-                <h3 className="font-medium">
-                  {log.action}
-                </h3>
+            <div className="mt-2 h-3 w-3 rounded-full bg-primary shrink-0" />
 
-                <span className="text-xs text-muted-foreground">
-                  {new Date(
-                    log.created_at
-                  ).toLocaleString()}
+            <div className="flex-1 border-l pl-5">
+
+              <div className="flex flex-wrap items-center gap-3">
+
+                <Badge
+                  variant={badgeVariant(log.event_type) as any}
+                >
+                  {log.event_type}
+                </Badge>
+
+                <span className="font-medium">
+                  {log.actor}
                 </span>
+
               </div>
 
-              <p className="mt-1 text-sm">
-                <span className="font-medium">
-                  {log.status}
-                </span>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {log.details}
               </p>
 
-              <p className="text-sm text-muted-foreground">
-                {log.reasoning}
+              <p className="mt-2 text-xs text-muted-foreground">
+                {new Date(
+                  log.created_at
+                ).toLocaleString()}
               </p>
+
             </div>
+
           </div>
         ))}
+
       </div>
+
     </Card>
   );
 }

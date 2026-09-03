@@ -3,44 +3,40 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { getAuditDashboard } from "@/lib/audit-api";
-
 import { AuditLog } from "@/types/audit";
 
 export function useAudit() {
   const [logs, setLogs] = useState<AuditLog[]>([]);
-
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState("");
 
   const [search, setSearch] = useState("");
 
   const [total, setTotal] = useState(0);
-
   const [approved, setApproved] = useState(0);
-
   const [rejected, setRejected] = useState(0);
-
   const [executed, setExecuted] = useState(0);
 
   useEffect(() => {
     async function load() {
       try {
         setLoading(true);
+        setError("");
 
         const dashboard = await getAuditDashboard();
 
         setLogs(dashboard.logs);
 
         setTotal(dashboard.summary.total);
-
         setApproved(dashboard.summary.approved);
-
         setRejected(dashboard.summary.rejected);
-
         setExecuted(dashboard.summary.executed);
       } catch (err: any) {
-        setError(err?.message ?? "Unable to load audit logs.");
+        console.error(err);
+        setError(
+          err?.response?.data?.detail ??
+            "Unable to load audit logs."
+        );
       } finally {
         setLoading(false);
       }
@@ -50,34 +46,32 @@ export function useAudit() {
   }, []);
 
   const filteredLogs = useMemo(() => {
-    const term = search.toLowerCase();
+    const term = search.trim().toLowerCase();
+
+    if (!term) return logs;
 
     return logs.filter((log) => {
       return (
         log.event_type.toLowerCase().includes(term) ||
         log.actor.toLowerCase().includes(term) ||
-        log.details.toLowerCase().includes(term)
+        log.details.toLowerCase().includes(term) ||
+        log.recommendation_id.toLowerCase().includes(term)
       );
     });
   }, [logs, search]);
 
   return {
     loading,
-
     error,
 
     logs: filteredLogs,
 
     total,
-
     approved,
-
     rejected,
-
     executed,
 
     search,
-
     setSearch,
   };
 }

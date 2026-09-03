@@ -20,11 +20,11 @@ export default function DashboardLayout({
 
   // Client-side guard, in addition to middleware.ts — belt and braces in
   // case middleware is ever bypassed (e.g. a stale/cleared cookie mid-session).
-  useEffect(() => {
-    if (!loading && !merchant) {
-      router.replace("/login");
-    }
-  }, [loading, merchant, router]);
+  // useEffect(() => {
+  //   if (!loading && !merchant) {
+  //     router.replace("/login");
+  //   }
+  // }, [loading, merchant, router]);
 
   if (loading || !merchant) {
     return (

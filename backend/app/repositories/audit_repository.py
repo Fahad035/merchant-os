@@ -11,42 +11,28 @@ class AuditRepository(BaseRepository[AuditLog]):
     def by_event(self, event: str):
         return (
             self.db.query(AuditLog)
-            .filter(
-                AuditLog.event_type == event
-            )
+            .filter(AuditLog.event_type == event)
             .all()
         )
 
     def create(
-
-    self,
-
-    merchant_id,
-
-    recommendation_id,
-
-    action,
-
-    details,
-
+        self,
+        merchant_id,
+        recommendation_id,
+        event_type,
+        actor,
+        details,
     ):
-
         audit = AuditLog(
-
             merchant_id=merchant_id,
-
             recommendation_id=recommendation_id,
-
-            action=action,
-
+            event_type=event_type,
+            actor=actor,
             details=details,
-
         )
 
         self.db.add(audit)
-
         self.db.commit()
-
         self.db.refresh(audit)
 
         return audit

@@ -27,7 +27,7 @@ class RecommendationExecutionService:
 
         recommendation = self.recommendations.get(
             recommendation_id
-        )
+    )
 
         if recommendation is None:
             raise ValueError("Recommendation not found.")
@@ -37,81 +37,78 @@ class RecommendationExecutionService:
         self.db.commit()
 
         self.audit_logs.create(
-            merchant_id=recommendation.merchant_id,
-            recommendation_id=recommendation.id,
-            action="approved",
-            details="Merchant approved recommendation.",
-        )
+        merchant_id=recommendation.merchant_id,
+        recommendation_id=recommendation.id,
+        event_type="Approved",
+        actor="Merchant",
+        details="Merchant approved recommendation.",
+    )
 
         return recommendation
     # --------------------------------------------------
 
     def reject(
-        self,
-        recommendation_id: UUID,
+    self,
+    recommendation_id: UUID,
     ):
 
         recommendation = self.recommendations.get(
-            recommendation_id
-        )
+        recommendation_id
+    )
 
         if recommendation is None:
-
             raise ValueError(
-                "Recommendation not found."
-            )
+            "Recommendation not found."
+        )
 
         recommendation.status = "rejected"
 
         self.db.commit()
 
         self.audit_logs.create(
-
-            merchant_id=recommendation.merchant_id,
-
-            recommendation_id=recommendation.id,
-
-            action="rejected",
-
-            details="Merchant rejected recommendation.",
-        )
+        merchant_id=recommendation.merchant_id,
+        recommendation_id=recommendation.id,
+        event_type="Rejected",
+        actor="Merchant",
+        details="Merchant rejected recommendation.",
+    )
 
         return recommendation
 
     def execute(self, recommendation_id):
 
         recommendation = self.recommendations.get(
-            recommendation_id
-        )
+        recommendation_id
+    )
 
         if recommendation is None:
-         raise ValueError("Recommendation not found.")
+            raise ValueError("Recommendation not found.")
 
         if recommendation.status != "approved":
             raise ValueError(
-                "Recommendation must be approved first."
-            )
+            "Recommendation must be approved first."
+        )
 
         action = ActionFactory.create(
             recommendation.action_type,
             self.db,
-        )
+    )
 
         result = action.execute(
             recommendation
-        )
+    )
 
         if result["success"]:
-
             recommendation.status = "executed"
 
         self.db.commit()
 
         self.audit_logs.create(
-            merchant_id=recommendation.merchant_id,
-            recommendation_id=recommendation.id,
-            action="executed" if result["success"] else "failed",
-            details=result["message"],
-        )
+        merchant_id=recommendation.merchant_id,
+        recommendation_id=recommendation.id,
+        event_type="Executed" if result["success"] else "Failed",
+        actor="System",
+        details=result["message"],
+    )
 
         return result

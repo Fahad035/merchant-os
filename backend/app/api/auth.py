@@ -14,13 +14,13 @@ router = APIRouter(
 )
 
 
-def _set_auth_cookie(response: Response, token: str) -> None:
+def _set_auth_cookie(response: Response, token: str):
     response.set_cookie(
         key=settings.COOKIE_NAME,
         value=token,
         httponly=True,
         secure=settings.COOKIE_SECURE,
-        samesite="lax",
+        samesite="none",      # <-- IMPORTANT
         max_age=settings.JWT_EXPIRE_MINUTES * 60,
         path="/",
     )

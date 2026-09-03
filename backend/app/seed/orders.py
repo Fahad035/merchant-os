@@ -15,7 +15,6 @@ ORDER_STATUSES = [
     "paid",
     "paid",
     "paid",
-    "paid",
     "pending",
     "cancelled",
 ]
@@ -24,44 +23,44 @@ ORDER_STATUSES = [
 def seed_orders(
     db: Session,
     merchant_id,
-    count: int = 400,
+    count: int = 60,
 ):
-
     existing = (
         db.query(Order)
-        .filter(
-            Order.merchant_id == merchant_id
-        )
+        .filter(Order.merchant_id == merchant_id)
         .count()
     )
 
     if existing >= count:
-        print("✓ Orders already seeded")
+        print(f"✓ {existing} orders already exist.")
         return
 
     customers = (
         db.query(Customer)
-        .filter(
-            Customer.merchant_id == merchant_id
-        )
+        .filter(Customer.merchant_id == merchant_id)
         .all()
     )
 
     products = (
         db.query(Product)
-        .filter(
-            Product.merchant_id == merchant_id
-        )
+        .filter(Product.merchant_id == merchant_id)
         .all()
     )
 
-    if not customers or not products:
-        print("Seed products and customers first.")
+    if not customers:
+        print("❌ No customers found.")
+        return
+
+    if not products:
+        print("❌ No products found.")
         return
 
     created = 0
 
     for i in range(count):
+
+        if i % 10 == 0:
+            print(f"Creating order {i + 1}/{count}")
 
         customer = choice(customers)
 
@@ -74,7 +73,7 @@ def seed_orders(
         )
 
         db.add(order)
-        db.flush()
+        db.flush()  # Needed only to get order.id
 
         total = Decimal("0")
 
@@ -96,15 +95,21 @@ def seed_orders(
 
             db.add(item)
 
-            total += Decimal(product.price) * qty
+            total += Decimal(str(product.price)) * qty
 
             if product.stock >= qty:
                 product.stock -= qty
 
         order.total_amount = total
-
         created += 1
+
+        # Commit every 20 orders
+        if created % 20 == 0:
+            db.commit()
+            print(f"✓ {created} orders committed")
 
     db.commit()
 
-    print(f"✓ Seeded {created} orders")
+    print("===================================")
+    print(f"✓ Successfully seeded {created} orders")
+    print("===================================")

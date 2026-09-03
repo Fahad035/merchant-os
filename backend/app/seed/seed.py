@@ -65,7 +65,7 @@ def main():
         orders = seed_orders(
             db,
             merchant_id,
-            400,
+            60,
         )
 
         print("Creating AI recommendations...")

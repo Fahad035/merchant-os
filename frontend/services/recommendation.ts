@@ -14,43 +14,36 @@ export interface Recommendation {
 }
 
 class RecommendationService {
-  async getRecommendations(
-    merchantId: string
-  ): Promise<Recommendation[]> {
-    const response = await api.get<Recommendation[]>(
-      "/recommendations",
-      {
-        params: {
-          merchant_id: merchantId,
-        },
-      }
-    );
+  async getRecommendations(merchantId: string): Promise<Recommendation[]> {
+    const response = await api.get<Recommendation[]>("/recommendations", {
+      params: {
+        merchant_id: merchantId,
+      },
+    });
 
     return response.data;
   }
 
-  async approveRecommendation(
-    recommendationId: string
-  ) {
-    const response = await api.post(
-      "/recommendations/approve",
-      {
-        recommendation_id: recommendationId,
-      }
-    );
+  async approveRecommendation(recommendationId: string) {
+    const response = await api.post("/recommendations/approve", {
+      recommendation_id: recommendationId,
+    });
 
     return response.data;
   }
 
-  async rejectRecommendation(
-    recommendationId: string
-  ) {
-    const response = await api.post(
-      "/recommendations/reject",
-      {
-        recommendation_id: recommendationId,
-      }
-    );
+  async rejectRecommendation(recommendationId: string) {
+    const response = await api.post("/recommendations/reject", {
+      recommendation_id: recommendationId,
+    });
+
+    return response.data;
+  }
+
+  async executeRecommendation(recommendationId: string) {
+    const response = await api.post("/recommendations/execute", {
+      recommendation_id: recommendationId,
+    });
 
     return response.data;
   }

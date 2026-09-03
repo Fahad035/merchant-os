@@ -6,13 +6,9 @@ import recommendationService, {
   Recommendation,
 } from "@/services/recommendation";
 
-import { executeRecommendation } from "@/lib/api";
-
 export function useRecommendations() {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
-
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState(false);
 
   async function loadRecommendations() {
@@ -27,7 +23,10 @@ export function useRecommendations() {
         return;
       }
 
-      const data = await recommendationService.getRecommendations(merchantId);
+      const data =
+        await recommendationService.getRecommendations(
+          merchantId
+        );
 
       setRecommendations(data);
     } catch (err) {
@@ -40,34 +39,30 @@ export function useRecommendations() {
 
   useEffect(() => {
     void loadRecommendations();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function approve(id: string) {
     await recommendationService.approveRecommendation(id);
-
     await loadRecommendations();
   }
 
   async function reject(id: string) {
     await recommendationService.rejectRecommendation(id);
-
     await loadRecommendations();
   }
 
-  const execute = async (id: string) => {
-    await executeRecommendation(id);
+  async function execute(id: string) {
+    await recommendationService.executeRecommendation(id);
     await loadRecommendations();
-  };
+  }
 
   return {
-  recommendations,
-  loading,
-  error,
-  refresh: loadRecommendations,
-  approve,
-  reject,
-  execute,
-};
+    recommendations,
+    loading,
+    error,
+    refresh: loadRecommendations,
+    approve,
+    reject,
+    execute,
+  };
 }

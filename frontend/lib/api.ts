@@ -12,13 +12,18 @@ const api = axios.create({
 });
 
 export const approveRecommendation = (id: string) =>
-  api.post(`/recommendations/${id}/approve`);
+  api.post("/recommendations/approve", {
+    recommendation_id: id,
+  });
 
 export const rejectRecommendation = (id: string) =>
-  api.post(`/recommendations/${id}/reject`);
+  api.post("/recommendations/reject", {
+    recommendation_id: id,
+  });
 
 export const executeRecommendation = (id: string) =>
-  api.post(`/recommendations/${id}/execute`);
-
+  api.post("/recommendations/execute", {
+    recommendation_id: id,
+  });
 
 export default api;

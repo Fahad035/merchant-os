@@ -8,7 +8,7 @@ from app.core.config import settings
 
 class LLMService:
 
-    MODEL = "gemini-3.6-flash"
+    MODEL = "gemini-2.5-flash"
 
     def __init__(self):
 

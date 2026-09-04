@@ -1,6 +1,8 @@
 "use client";
-
+import axios from "axios";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { executeRecommendation } from "@/lib/api";
 
 import recommendationService, {
   Recommendation,
@@ -8,6 +10,7 @@ import recommendationService, {
 
 export function useRecommendations() {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [processingId, setProcessingId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -23,10 +26,7 @@ export function useRecommendations() {
         return;
       }
 
-      const data =
-        await recommendationService.getRecommendations(
-          merchantId
-        );
+      const data = await recommendationService.getRecommendations(merchantId);
 
       setRecommendations(data);
     } catch (err) {
@@ -38,22 +38,61 @@ export function useRecommendations() {
   }
 
   useEffect(() => {
-    void loadRecommendations();
+    async function init() {
+      await loadRecommendations();
+    }
+
+    void init();
   }, []);
 
   async function approve(id: string) {
-    await recommendationService.approveRecommendation(id);
-    await loadRecommendations();
+    try {
+      setProcessingId(id);
+
+      await recommendationService.approveRecommendation(id);
+
+      toast.success("Recommendation approved");
+
+      await loadRecommendations();
+    } catch {
+      toast.error("Failed to approve recommendation");
+    } finally {
+      setProcessingId(null);
+    }
   }
 
   async function reject(id: string) {
-    await recommendationService.rejectRecommendation(id);
-    await loadRecommendations();
+    try {
+      setProcessingId(id);
+
+      await recommendationService.rejectRecommendation(id);
+
+      toast.success("Recommendation rejected");
+
+      await loadRecommendations();
+    } catch {
+      toast.error("Failed to reject recommendation");
+    } finally {
+      setProcessingId(null);
+    }
   }
 
   async function execute(id: string) {
-    await recommendationService.executeRecommendation(id);
-    await loadRecommendations();
+    try {
+      setProcessingId(id);
+
+      await executeRecommendation(id);
+
+      toast.success("Recommendation executed successfully");
+
+      await loadRecommendations();
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        toast.error(err.response?.data?.detail ?? "Execution failed");
+      } else {
+        toast.error("Execution failed");
+      }
+    }
   }
 
   return {
@@ -64,5 +103,6 @@ export function useRecommendations() {
     approve,
     reject,
     execute,
+    processingId,
   };
 }

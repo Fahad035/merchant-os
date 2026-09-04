@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/hooks/useAuth";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 const fontSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -46,8 +47,12 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
-      <body className="min-h-screen bg-background antialiased" suppressHydrationWarning>
+      <body
+        className="min-h-screen bg-background antialiased"
+        suppressHydrationWarning
+      >
         <AuthProvider>{children}</AuthProvider>
+        <Toaster richColors position="top-right" closeButton />
       </body>
     </html>
   );
